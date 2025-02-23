@@ -126,6 +126,15 @@ const Admin = () => {
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <Box sx={{ width: '200px', backgroundColor: '#f4f4f4', padding: '16px' }}>
         <h1>Admin Page</h1>
+        <a href="/addquation">
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ marginBottom: '8px', marginTop: '12px' }}
+          >
+            Add Quations
+          </Button>
+        </a>
         {['event', 'milestone', 'course'].map((section) => (
           <Button
             key={section}

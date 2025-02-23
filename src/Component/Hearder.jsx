@@ -60,7 +60,7 @@ const Header = () => {
         <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/event">Event</NavLink>
-        <NavLink to="/milestone">Milestone</NavLink>
+        {/* <NavLink to="/milestone">Milestone</NavLink> */}
         <NavLink to="/course">Course</NavLink>
         {isLoggedIn ? (
           <>

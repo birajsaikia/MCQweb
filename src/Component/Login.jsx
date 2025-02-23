@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -97,7 +98,10 @@ const Login = () => {
           </Button>
         </form>
         <Typography variant="body1" sx={{ margin: '10px' }} align="center">
-          Don’t have an account? <a href="./signup">Sign up</a>
+          <Link to="/resetpassword">Forget Password</Link>
+        </Typography>
+        <Typography variant="body1" sx={{ margin: '10px' }} align="center">
+          Don’t have an account? <Link to="/signup">Sign up</Link>
         </Typography>
       </Paper>
     </Container>

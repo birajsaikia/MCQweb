@@ -60,14 +60,14 @@ const ViewSubjectPage = () => {
                 color: '#fff',
               }}
             >
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold">
-                  <Link to={`/viewcosubject/${courseId}/${subject._id}`}>
+              <Link to={`/viewcosubject/${courseId}/${subject._id}`}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold">
                     {subject.name}
-                  </Link>
-                </Typography>
-                <Typography variant="body2">{subject.description}</Typography>
-              </CardContent>
+                  </Typography>
+                  {/* <Typography variant="body2">{subject.description}</Typography> */}
+                </CardContent>
+              </Link>
             </Card>
           </Grid>
         ))}

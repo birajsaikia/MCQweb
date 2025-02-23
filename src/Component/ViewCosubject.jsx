@@ -62,16 +62,16 @@ const ViewCoSubject = () => {
                   color: '#fff',
                 }}
               >
-                <CardContent>
-                  <Link
-                    to={`/coursequation/${courseId}/${subjectId}/${subject._id}`}
-                  >
+                <Link
+                  to={`/coursequation/${courseId}/${subjectId}/${subject._id}`}
+                >
+                  <CardContent>
                     <Typography variant="h6" fontWeight="bold">
                       {subject.name}
                     </Typography>
                     {/* <Typography variant="body2">{subject.description}</Typography> */}
-                  </Link>
-                </CardContent>
+                  </CardContent>
+                </Link>
               </Card>
             </Grid>
           ))

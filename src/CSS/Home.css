@@ -4,8 +4,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 30px;
-  padding: 5%;
+  padding: 0 6%;
   background-color: #f9f9f9;
+  /* box-shadow: 0px 15px 10px -15px #111; */
 }
 
 .content {
@@ -14,20 +15,20 @@
 
 h1 {
   font-size: 2.5rem;
-  color: #31473a;
+  color: #272343;
 }
 
 h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #31473a;
+  color: #272343;
 }
 
 p {
   margin-top: 4%;
   font-size: 1.2rem;
   line-height: 1.6;
-  color: #777;
+  color: black;
 }
 
 .button {

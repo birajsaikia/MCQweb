@@ -1,69 +1,120 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, Divider } from '@mui/material';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Divider,
+  MenuItem,
+  Select,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
-const AddSubjectPage = () => {
+const AddQuestionPage = () => {
+  const [courses, setCourses] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [coSubjects, setCoSubjects] = useState([]);
+
+  const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedCoSubject, setSelectedCoSubject] = useState('');
+
+  const [addedCoSubjects, setAddedCoSubjects] = useState([]);
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [answer, setAnswer] = useState('');
   const [savedQuestions, setSavedQuestions] = useState([]);
-  const [isTokenValid, setIsTokenValid] = useState(true);
-  const { courseId, subjectId, cosubjectId, course, subject, cosubject } =
-    useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    verifyToken();
-    fetchSavedQuestions();
-  }, []);
-
-  const verifyToken = async () => {
-    console.log('courseId:', courseId);
-    const token = Cookies.get('admin_token');
-    if (!token) {
-      setIsTokenValid(false);
-      navigate('/');
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        'https://mc-qweb-backend.vercel.app/user/verify-tokenadmin',
-        { token }
-      );
-      if (!response.data.valid) {
-        setIsTokenValid(false);
-        navigate('/');
-      }
-    } catch (error) {
-      console.error('Error verifying token:', error);
-      setIsTokenValid(false);
-      navigate('/');
-    }
-  };
-
-  const fetchSavedQuestions = () => {
+    fetchCourses();
     const storedQuestions = JSON.parse(localStorage.getItem('questions')) || [];
     setSavedQuestions(storedQuestions);
+  }, []);
+
+  // Fetch Courses
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get(
+        'https://mc-qweb-backend.vercel.app/user/admin/course'
+      );
+      setCourses(response.data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
   };
 
+  // Fetch Subjects when a Course is selected
+  const fetchSubjects = async (courseId) => {
+    try {
+      const response = await axios.get(
+        `https://mc-qweb-backend.vercel.app/user/admin/subject/${courseId}`
+      );
+      setSubjects(response.data.subjects || response.data);
+      setSelectedSubject('');
+      setCoSubjects([]);
+      setSelectedCoSubject('');
+      setAddedCoSubjects([]); // Reset Co-Subjects when changing Course
+    } catch (error) {
+      console.error('Error fetching subjects:', error);
+    }
+  };
+
+  // Fetch Co-Subjects when a Subject is selected
+  const fetchCoSubjects = async (subjectId) => {
+    try {
+      const response = await axios.get(
+        `https://mc-qweb-backend.vercel.app/user/admin/cosubject/${selectedCourse}/${subjectId}`
+      );
+      setCoSubjects(response.data.cosubject || []);
+      setSelectedCoSubject('');
+    } catch (error) {
+      console.error('Error fetching co-subjects:', error);
+    }
+  };
+
+  // Add Co-Subject to the List
+  const handleAddCoSubject = () => {
+    if (selectedCoSubject && !addedCoSubjects.includes(selectedCoSubject)) {
+      setAddedCoSubjects([...addedCoSubjects, selectedCoSubject]);
+      setSelectedCoSubject('');
+    }
+  };
+  // Handle option changes
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
   };
 
+  // Remove Co-Subject from List
+  const handleRemoveCoSubject = (coSubId) => {
+    const updatedList = addedCoSubjects.filter((id) => id !== coSubId);
+    setAddedCoSubjects(updatedList);
+  };
+
+  // Add Question to Local Storage
   const handleAddQuestion = () => {
     if (
       question.trim() &&
       options.every((opt) => opt.trim()) &&
       answer.trim()
     ) {
-      const newQuestion = { question, options, answer };
-      const updatedQuestions = [...savedQuestions, newQuestion];
+      const newQuestion = {
+        question,
+        options,
+        answer,
+        course: selectedCourse,
+        subject: selectedSubject,
+        coSubjects: addedCoSubjects,
+      };
 
+      const updatedQuestions = [...savedQuestions, newQuestion];
       localStorage.setItem('questions', JSON.stringify(updatedQuestions));
       setSavedQuestions(updatedQuestions);
 
@@ -73,138 +124,202 @@ const AddSubjectPage = () => {
     }
   };
 
-  const handleDeleteQuestion = (index) => {
+  // Remove Question from Local Storage
+  const handleRemoveQuestion = (index) => {
     const updatedQuestions = savedQuestions.filter((_, i) => i !== index);
     localStorage.setItem('questions', JSON.stringify(updatedQuestions));
     setSavedQuestions(updatedQuestions);
   };
 
+  // Final Submit to Backend
   const handleFinalSubmit = async () => {
+    if (!selectedCourse || !selectedSubject || addedCoSubjects.length === 0) {
+      alert(
+        'Please select a Course, Subject, and add at least one Co-Subject.'
+      );
+      return;
+    }
+
+    const formattedQuestions = savedQuestions.map((q) => ({
+      question: q.question,
+      options: q.options,
+      correctOption: q.answer,
+      courseId: selectedCourse,
+      subjectId: selectedSubject,
+      coSubjects: addedCoSubjects, // Send all selected co-subjects
+    }));
+
+    console.log(
+      'Payload being sent:',
+      JSON.stringify({ questions: formattedQuestions }, null, 2)
+    );
+
     try {
-      const formattedQuestions = savedQuestions.map((q) => ({
-        question: q.question,
-        options: q.options,
-        correctOption: q.answer, // Make sure this matches the backend schema
-      }));
-
-      console.log('Sending Data:', formattedQuestions);
-
-      await axios.post(
-        `https://mc-qweb-backend.vercel.app/user/admin/addquestion/${courseId}/${subjectId}/${cosubjectId}`,
+      const response = await axios.post(
+        `https://mc-qweb-backend.vercel.app/user/admin/addquestion/`,
         { questions: formattedQuestions },
         { headers: { 'Content-Type': 'application/json' } }
       );
 
-      localStorage.removeItem('questions');
-      setSavedQuestions([]);
-      alert('Questions saved successfully!');
+      if (response.status === 200) {
+        localStorage.removeItem('questions');
+        setSavedQuestions([]);
+        alert('Questions saved successfully!');
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
     } catch (error) {
-      console.error('Error saving questions:', error);
+      console.error('Error response:', error.response?.data);
+      alert(
+        error.response?.data?.message ||
+          'An error occurred while saving questions.'
+      );
     }
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px' }}>
-      {isTokenValid && (
-        <div>
-          <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-            Add Questions in {course} / {subject} / {cosubject}
-          </Typography>
-          <Divider sx={{ margin: '16px 0' }} />
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', padding: '16px', gap: 2 }}
+    >
+      <Typography variant="h4">Add Questions</Typography>
 
-          {/* Input Fields */}
-          <TextField
-            label="Question"
-            variant="outlined"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            sx={{ marginBottom: '16px' }}
-          />
+      {/* Course Selection */}
+      <Typography>Select Course</Typography>
+      <Select
+        value={selectedCourse}
+        onChange={(e) => {
+          setSelectedCourse(e.target.value);
+          fetchSubjects(e.target.value);
+        }}
+        displayEmpty
+      >
+        <MenuItem value="" disabled>
+          Select Course
+        </MenuItem>
+        {courses.map((course) => (
+          <MenuItem key={course._id} value={course._id}>
+            {course.name}
+          </MenuItem>
+        ))}
+      </Select>
 
-          {[0, 1, 2, 3].map((index) => (
-            <TextField
-              key={index}
-              label={`Option ${index + 1}`}
-              variant="outlined"
-              value={options[index]}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              sx={{ marginBottom: '8px' }}
+      {/* Subject Selection */}
+      {subjects.length > 0 && (
+        <>
+          <Typography>Select Subject</Typography>
+          <Select
+            value={selectedSubject}
+            onChange={(e) => {
+              setSelectedSubject(e.target.value);
+              fetchCoSubjects(e.target.value);
+            }}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>
+              Select Subject
+            </MenuItem>
+            {subjects.map((subject) => (
+              <MenuItem key={subject._id} value={subject._id}>
+                {subject.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </>
+      )}
+
+      {/* Co-Subject Selection */}
+      {coSubjects.length > 0 && (
+        <>
+          <Typography>Select Co-Subject</Typography>
+          <Select
+            value={selectedCoSubject}
+            onChange={(e) => setSelectedCoSubject(e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>
+              Select Co-Subject
+            </MenuItem>
+            {coSubjects.map((cosub) => (
+              <MenuItem key={cosub._id} value={cosub._id}>
+                {cosub.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <Button variant="contained" onClick={handleAddCoSubject}>
+            Add Co-Subject
+          </Button>
+
+          {/* Display Added Co-Subjects */}
+          <List>
+            {addedCoSubjects.map((id, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={coSubjects.find((c) => c._id === id)?.name}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton onClick={() => handleRemoveCoSubject(id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
+
+      <Divider />
+
+      {/* Question Input */}
+      <Typography>Add a Question</Typography>
+      <TextField
+        label="Question"
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+      />
+
+      {/* Options Inputs */}
+      {options.map((opt, index) => (
+        <TextField
+          key={index}
+          label={`Option ${index + 1}`}
+          value={opt}
+          onChange={(e) => handleOptionChange(index, e.target.value)}
+        />
+      ))}
+
+      {/* Correct Answer Input */}
+      <TextField
+        label="Correct Answer"
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+      />
+
+      {/* Add to Local Storage */}
+      <Button variant="contained" onClick={handleAddQuestion}>
+        Add to Local Storage
+      </Button>
+      <List>
+        {savedQuestions.map((q, index) => (
+          <ListItem key={index}>
+            <ListItemText
+              primary={q.question}
+              secondary={`Answer: ${q.answer}`}
             />
-          ))}
+            <ListItemSecondaryAction>
+              <IconButton onClick={() => handleRemoveQuestion(index)}>
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
 
-          <TextField
-            label="Correct Answer"
-            variant="outlined"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            sx={{ marginBottom: '16px' }}
-          />
-
-          <Button
-            variant="contained"
-            onClick={handleAddQuestion}
-            sx={{ marginBottom: '16px' }}
-          >
-            Add to Local Storage
-          </Button>
-
-          {/* Display Saved Questions */}
-          <Typography variant="h5">Saved Questions</Typography>
-          {savedQuestions.length > 0 ? (
-            savedQuestions.map((q, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  padding: '8px',
-                  marginBottom: '8px',
-                }}
-              >
-                <Typography>
-                  <strong>Q:</strong> {q.question}
-                </Typography>
-                {q.options.map((opt, i) => (
-                  <Typography key={i}>• {opt}</Typography>
-                ))}
-                <Typography>
-                  <strong>Answer:</strong> {q.answer}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => handleDeleteQuestion(index)}
-                  sx={{ marginTop: '8px' }}
-                >
-                  Delete
-                </Button>
-              </Box>
-            ))
-          ) : (
-            <Typography>No questions saved yet.</Typography>
-          )}
-
-          {/* Final Submit */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleFinalSubmit}
-            sx={{ marginTop: '16px' }}
-          >
-            Final Submit (Save to Database)
-          </Button>
-        </div>
-      )}
-
-      {!isTokenValid && (
-        <Typography variant="body1" color="error">
-          Invalid or expired token. Redirecting to home...
-        </Typography>
-      )}
+      {/* Submit to Database */}
+      <Button variant="contained" color="primary" onClick={handleFinalSubmit}>
+        Final Submit
+      </Button>
     </Box>
   );
 };
 
-export default AddSubjectPage;
+export default AddQuestionPage;

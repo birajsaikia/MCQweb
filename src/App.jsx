@@ -17,6 +17,8 @@ import Addsubject from './Component/AddSubject';
 import AddCoSubject from './Component/Addcosubject';
 import ViewSubjectPage from './Component/ViewSubject';
 import ViewCoSubject from './Component/ViewCosubject';
+// import Forgetpassword from './Component/forgetpassword';
+import Resetpassword from './Component/reset-password';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,18 +30,18 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/event" element={<Event />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup/:referralCode?" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/milestone" element={<Milestone />} />
           <Route path="/footer" element={<Footer />} />
           <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/userprofile" element={<Userprofile />} />
-          <Route
-            path="/:course/:subject/:cosubject/quations/:courseId/:subjectId/:cosubjectId"
-            element={<Addquation />}
-          />
+          <Route path="/addquation" element={<Addquation />} />
           <Route path="/course" element={<Course />} />
+          {/* <Route path="/forgetpassword" element={<Forgetpassword />} /> */}
+          <Route path="/resetpassword" element={<Resetpassword />} />
+
           <Route
             path="/:course/addsubject/:courseId"
             element={<Addsubject />}

@@ -8,13 +8,13 @@ import {
   CircularProgress,
   Container,
 } from '@mui/material';
+import '../CSS/Course.css';
 
 const Course = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,10 +36,9 @@ const Course = () => {
     fetchData();
   }, []);
 
-  // Display loading or error messages
   if (loading) {
     return (
-      <Container style={styles.loadingContainer}>
+      <Container className="loading-container">
         <CircularProgress />
       </Container>
     );
@@ -47,12 +46,12 @@ const Course = () => {
 
   if (error) {
     return (
-      <Container style={styles.errorContainer}>
+      <Container className="error-container">
         <Typography variant="h6" color="error">
           Error: {error}
         </Typography>
         <button
-          style={styles.retryButton}
+          className="retry-button"
           onClick={() => window.location.reload()}
         >
           Retry
@@ -62,127 +61,19 @@ const Course = () => {
   }
 
   return (
-    <Container style={styles.courseContainer}>
-      <h1 style={styles.title}>Courses</h1>
-
-      {/* Centering the course list properly */}
-      <Grid container spacing={3} style={styles.centerGrid}>
+    <div className="course-container">
+      <h1 className="title">Courses</h1>
+      <div className="course-list">
         {courses.map((course) => (
-          <Grid
-            item
-            key={course._id}
-            xs={12}
-            sm={6}
-            md={4}
-            style={styles.centerGridItem}
-          >
-            <Card style={styles.courseCard}>
-              <CardContent style={styles.cardContent}>
-                {/* Course Image */}
-                <img
-                  src={`/src/ImageCourse/${course.image}`}
-                  height={100}
-                  width={100}
-                  alt={course.name}
-                  style={styles.courseImage}
-                />
-                {/* Course Name */}
-                <Typography
-                  variant="h5"
-                  component="div"
-                  style={styles.courseName}
-                >
-                  <Link
-                    to={`/src/viewsubject/${course._id}`}
-                    style={styles.courseLink}
-                  >
-                    {course.name}
-                  </Link>
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          <div key={course._id} className="course-card">
+            <Link to={`/viewsubject/${course._id}`} className="course-link">
+              {course.name}
+            </Link>
+          </div>
         ))}
-      </Grid>
-    </Container>
+      </div>
+    </div>
   );
-};
-
-// Inline Styles
-const styles = {
-  courseContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center', // Centers the whole course section
-    justifyContent: 'center',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  title: {
-    marginBottom: 20,
-  },
-  centerGrid: {
-    display: 'flex',
-    justifyContent: 'center', // Centers the entire grid
-  },
-  centerGridItem: {
-    display: 'flex',
-    justifyContent: 'center', // Centers individual grid items
-  },
-  courseCard: {
-    width: 200, // Fixed width to keep it centered
-    height: 200,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    backgroundColor: '#f5f5f5',
-    transition: 'transform 0.2s ease-in-out',
-    padding: 10,
-  },
-  cardContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-  },
-  courseImage: {
-    width: '100%', // Full width of the card
-    height: 120, // Fixed height
-    objectFit: 'cover', // Ensures the image fits well
-    borderRadius: 5, // Rounded corners for the image
-    marginBottom: 10, // Space between image and text
-  },
-  courseName: {
-    fontSize: '1.4rem',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  courseLink: {
-    textDecoration: 'none',
-    color: '#333',
-  },
-  loadingContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-  },
-  errorContainer: {
-    textAlign: 'center',
-    marginTop: 50,
-  },
-  retryButton: {
-    marginTop: 10,
-    padding: '10px 15px',
-    backgroundColor: '#d32f2f',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-  },
 };
 
 export default Course;

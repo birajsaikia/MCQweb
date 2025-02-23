@@ -3,12 +3,13 @@ import { TextField, Button, Typography, Container, Paper } from '@mui/material';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import Cookies from 'js-cookie'; // Import js-cookie
-import { useNavigate } from 'react-router-dom'; // For redirecting
+import Cookies from 'js-cookie';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SignUp = () => {
+  const { referralCode } = useParams(); // Get referral code from URL
   const [serverMessage, setServerMessage] = useState('');
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -16,6 +17,7 @@ const SignUp = () => {
       email: '',
       password: '',
       confirmPassword: '',
+      referralCode: referralCode || '', // Autofill if referral code exists in URL
     },
     validationSchema: Yup.object({
       username: Yup.string()
@@ -31,21 +33,21 @@ const SignUp = () => {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match')
         .required('Confirm Password is required'),
+      referralCode: Yup.string().optional(),
     }),
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          'https://mc-qweb-backend.vercel.app/user/register',
+          'http://localhost:5000/user/register',
           {
             name: values.username,
             email: values.email,
             password: values.password,
+            referralCode: values.referralCode, // Send referral code to backend
           }
         );
 
-        // Hash the email before storing (for basic security)
-        const hashedEmail = btoa(values.email); // Base64 encode email
-        Cookies.set('auth_token', response.data.token, { expires: 1 }); // Store in cookie for 7 days
+        Cookies.set('auth_token', response.data.token, { expires: 1 });
 
         setServerMessage({
           type: 'success',
@@ -53,7 +55,7 @@ const SignUp = () => {
         });
 
         setTimeout(() => {
-          navigate('/'); // Redirect to home page after signup
+          navigate('/');
         }, 2000);
       } catch (err) {
         setServerMessage({
@@ -137,6 +139,15 @@ const SignUp = () => {
             helperText={
               formik.touched.confirmPassword && formik.errors.confirmPassword
             }
+          />
+          <TextField
+            label="Referral Code (Optional)"
+            name="referralCode"
+            value={formik.values.referralCode}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            fullWidth
+            margin="normal"
           />
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
             Sign Up

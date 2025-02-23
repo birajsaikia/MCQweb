@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios
-import Cookies from 'js-cookie'; // Import js-cookie
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
   Container,
   Box,
@@ -21,27 +21,29 @@ const AdminLogin = () => {
     try {
       const response = await axios.post(
         'https://mc-qweb-backend.vercel.app/user/adminlogin',
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
 
-      // Handle success (token received)
       if (response.data.success) {
         console.log('Login successful');
-        // Store the token in a cookie
-        Cookies.set('admin_token', response.data.token, { expires: 1 }); // Cookie will expire in 1 day
+
+        // Remove existing token if present
+        if (Cookies.get('admin_token')) {
+          Cookies.remove('admin_token');
+        }
+
+        // Store the new token
+        Cookies.set('admin_token', response.data.token, { expires: 1 });
+
         setTimeout(() => {
-          window.location.href = '/admin'; // Replace with the route where you want to redirect
+          window.location.href = '/admin';
         }, 2000);
       } else {
-        // Handle failure
-        setError(response.data.msg); // Display error message
+        setError(response.data.msg);
       }
     } catch (err) {
       console.error('Login failed', err);
-      setError('Error occurred during login'); // Handle error in case of a failed request
+      setError('Error occurred during login');
     }
   };
 

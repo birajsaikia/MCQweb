@@ -6,6 +6,8 @@
   text-align: center;
   margin-top: 20px;
   padding: 10px;
+  /* box-shadow: 0px 15px 10px -15px #111; */
+  /* box-shadow: 0px -15px 10px -15px #111; */
 }
 
 h1 {
@@ -24,10 +26,35 @@ h1 {
 .box {
   width: 300px; /* Full width by default */
   max-width: 300px; /* Limit max width */
-  height: 150px;
+  height: 200px;
   border: 2px solid #31473a;
-  border-radius: 8px;
-  background-color: lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: 0.5s;
+  background-image: url(../view/eventposter.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-color: lightgray; */
+}
+.box div {
+  height: 100%;
+  width: 100%;
+  background: #000000;
+  color: azure;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  opacity: 0.5;
+}
+.box:hover {
+  transform: scale(1.1);
+  box-shadow: black;
+  /* opacity: 0.5%; */
+  /* background-color: black; */
 }
 
 /* Responsive: Stack boxes on small screens */
@@ -42,5 +69,10 @@ h1 {
   .box {
     width: 300px; /* Ensures box takes full width */
     max-width: none; /* Removes max-width restriction */
+  }
+  .box-container div:nth-child(3),
+  .box-container div:nth-child(4) {
+    /* Add your styles here */
+    display: none;
   }
 }

@@ -73,7 +73,7 @@ const AddSubjectPage = () => {
   const handleDeleteSubject = async (cosubjectId) => {
     try {
       await axios.delete(
-        `/course/subject/cosubject/quations/${courseId}/${subjectId}/${cosubjectId}`
+        `https://mc-qweb-backend.vercel.app/course/subject/cosubject/quations/${courseId}/${subjectId}/${cosubjectId}`
       );
       fetchSubjects();
     } catch (error) {
@@ -130,14 +130,6 @@ const AddSubjectPage = () => {
               >
                 <Typography>{subject.name}</Typography>
                 <Box>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    sx={{ marginRight: '8px' }}
-                    onClick={() => handleViewQuation(subject._id, subject.name)}
-                  >
-                    Add Questions
-                  </Button>
                   <Button
                     variant="outlined"
                     color="error"
