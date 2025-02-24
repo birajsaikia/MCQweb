@@ -6,11 +6,13 @@
   gap: 30px;
   padding: 0 6%;
   background-color: #f9f9f9;
+  /* margin-top: 56px; */
   /* box-shadow: 0px 15px 10px -15px #111; */
 }
 
 .content {
   max-width: 600px;
+  /* margin-top: 56px/; */
 }
 
 h1 {
@@ -46,6 +48,7 @@ p {
 
 .image-container {
   max-width: 500px;
+  /* margin-top: 90px; */
 }
 
 img {
@@ -59,6 +62,7 @@ img {
   .container {
     flex-direction: column; /* Stack items vertically */
     text-align: center;
+    padding: 0 6% 5%;
   }
 
   .image-container {

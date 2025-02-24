@@ -6,6 +6,7 @@ import Milestone from './Milestone';
 import Footer from './Footer';
 import Header from './Hearder';
 import Course from './Course';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -23,7 +24,11 @@ const Home = () => {
             knowledge, MCQweb makes learning fun and effective. Start your
             journey today!
           </p>
-          <button className="button">Try it now</button>
+          <button className="button">
+            <Link to="/course" style={{ color: 'white' }}>
+              Try it now
+            </Link>
+          </button>
         </div>
         <div className="image-container">
           <img src={benner} />

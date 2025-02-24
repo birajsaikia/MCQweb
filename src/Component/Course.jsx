@@ -65,11 +65,11 @@ const Course = () => {
       <h1 className="title">Courses</h1>
       <div className="course-list">
         {courses.map((course) => (
-          <div key={course._id} className="course-card">
-            <Link to={`/viewsubject/${course._id}`} className="course-link">
+          <Link to={`/viewsubject/${course._id}`} className="course-link">
+            <div key={course._id} className="course-card">
               {course.name}
-            </Link>
-          </div>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

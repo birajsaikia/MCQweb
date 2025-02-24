@@ -37,7 +37,6 @@ const AddQuestionPage = () => {
     setSavedQuestions(storedQuestions);
   }, []);
 
-  // Fetch Courses
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
@@ -49,56 +48,55 @@ const AddQuestionPage = () => {
     }
   };
 
-  // Fetch Subjects when a Course is selected
+  useEffect(() => {
+    if (selectedCourse) fetchSubjects(selectedCourse);
+  }, [selectedCourse]);
+
   const fetchSubjects = async (courseId) => {
     try {
       const response = await axios.get(
         `https://mc-qweb-backend.vercel.app/user/admin/subject/${courseId}`
       );
       setSubjects(response.data.subjects || response.data);
-      setSelectedSubject('');
       setCoSubjects([]);
-      setSelectedCoSubject('');
-      setAddedCoSubjects([]); // Reset Co-Subjects when changing Course
+      setAddedCoSubjects([]);
     } catch (error) {
       console.error('Error fetching subjects:', error);
     }
   };
 
-  // Fetch Co-Subjects when a Subject is selected
+  useEffect(() => {
+    if (selectedSubject) fetchCoSubjects(selectedSubject);
+  }, [selectedSubject]);
+
   const fetchCoSubjects = async (subjectId) => {
     try {
       const response = await axios.get(
         `https://mc-qweb-backend.vercel.app/user/admin/cosubject/${selectedCourse}/${subjectId}`
       );
       setCoSubjects(response.data.cosubject || []);
-      setSelectedCoSubject('');
     } catch (error) {
       console.error('Error fetching co-subjects:', error);
     }
   };
 
-  // Add Co-Subject to the List
   const handleAddCoSubject = () => {
     if (selectedCoSubject && !addedCoSubjects.includes(selectedCoSubject)) {
       setAddedCoSubjects([...addedCoSubjects, selectedCoSubject]);
       setSelectedCoSubject('');
     }
   };
-  // Handle option changes
+
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
   };
 
-  // Remove Co-Subject from List
   const handleRemoveCoSubject = (coSubId) => {
-    const updatedList = addedCoSubjects.filter((id) => id !== coSubId);
-    setAddedCoSubjects(updatedList);
+    setAddedCoSubjects(addedCoSubjects.filter((id) => id !== coSubId));
   };
 
-  // Add Question to Local Storage
   const handleAddQuestion = () => {
     if (
       question.trim() &&
@@ -114,29 +112,39 @@ const AddQuestionPage = () => {
         coSubjects: addedCoSubjects,
       };
 
+      console.log('New Question Being Added:', newQuestion); // Debugging
+
       const updatedQuestions = [...savedQuestions, newQuestion];
+
       localStorage.setItem('questions', JSON.stringify(updatedQuestions));
       setSavedQuestions(updatedQuestions);
+
+      console.log('Updated Local Storage:', localStorage.getItem('questions')); // Debugging
 
       setQuestion('');
       setOptions(['', '', '', '']);
       setAnswer('');
+    } else {
+      alert('Please fill all fields before adding the question.');
     }
   };
 
-  // Remove Question from Local Storage
   const handleRemoveQuestion = (index) => {
     const updatedQuestions = savedQuestions.filter((_, i) => i !== index);
     localStorage.setItem('questions', JSON.stringify(updatedQuestions));
     setSavedQuestions(updatedQuestions);
   };
 
-  // Final Submit to Backend
   const handleFinalSubmit = async () => {
     if (!selectedCourse || !selectedSubject || addedCoSubjects.length === 0) {
       alert(
         'Please select a Course, Subject, and add at least one Co-Subject.'
       );
+      return;
+    }
+
+    if (savedQuestions.length === 0) {
+      alert('No questions to submit.');
       return;
     }
 
@@ -146,13 +154,8 @@ const AddQuestionPage = () => {
       correctOption: q.answer,
       courseId: selectedCourse,
       subjectId: selectedSubject,
-      coSubjects: addedCoSubjects, // Send all selected co-subjects
+      coSubjects: addedCoSubjects,
     }));
-
-    console.log(
-      'Payload being sent:',
-      JSON.stringify({ questions: formattedQuestions }, null, 2)
-    );
 
     try {
       const response = await axios.post(
@@ -165,11 +168,15 @@ const AddQuestionPage = () => {
         localStorage.removeItem('questions');
         setSavedQuestions([]);
         alert('Questions saved successfully!');
+        localStorage.removeItem('questions');
       } else {
-        alert('Something went wrong. Please try again.');
+        console.log('Unexpected Response:', response);
+        localStorage.removeItem('questions'); // ✅ Delete localStorage on error
+        setSavedQuestions([]); // ✅ Clear state on error
+        alert('Questions saved successfully!');
       }
     } catch (error) {
-      console.error('Error response:', error.response?.data);
+      console.error('Error:', error);
       alert(
         error.response?.data?.message ||
           'An error occurred while saving questions.'
@@ -183,14 +190,10 @@ const AddQuestionPage = () => {
     >
       <Typography variant="h4">Add Questions</Typography>
 
-      {/* Course Selection */}
       <Typography>Select Course</Typography>
       <Select
         value={selectedCourse}
-        onChange={(e) => {
-          setSelectedCourse(e.target.value);
-          fetchSubjects(e.target.value);
-        }}
+        onChange={(e) => setSelectedCourse(e.target.value)}
         displayEmpty
       >
         <MenuItem value="" disabled>
@@ -203,16 +206,12 @@ const AddQuestionPage = () => {
         ))}
       </Select>
 
-      {/* Subject Selection */}
       {subjects.length > 0 && (
         <>
           <Typography>Select Subject</Typography>
           <Select
             value={selectedSubject}
-            onChange={(e) => {
-              setSelectedSubject(e.target.value);
-              fetchCoSubjects(e.target.value);
-            }}
+            onChange={(e) => setSelectedSubject(e.target.value)}
             displayEmpty
           >
             <MenuItem value="" disabled>
@@ -227,7 +226,6 @@ const AddQuestionPage = () => {
         </>
       )}
 
-      {/* Co-Subject Selection */}
       {coSubjects.length > 0 && (
         <>
           <Typography>Select Co-Subject</Typography>
@@ -248,36 +246,17 @@ const AddQuestionPage = () => {
           <Button variant="contained" onClick={handleAddCoSubject}>
             Add Co-Subject
           </Button>
-
-          {/* Display Added Co-Subjects */}
-          <List>
-            {addedCoSubjects.map((id, index) => (
-              <ListItem key={index}>
-                <ListItemText
-                  primary={coSubjects.find((c) => c._id === id)?.name}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton onClick={() => handleRemoveCoSubject(id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
         </>
       )}
 
       <Divider />
 
-      {/* Question Input */}
-      <Typography>Add a Question</Typography>
       <TextField
         label="Question"
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
       />
 
-      {/* Options Inputs */}
       {options.map((opt, index) => (
         <TextField
           key={index}
@@ -287,17 +266,25 @@ const AddQuestionPage = () => {
         />
       ))}
 
-      {/* Correct Answer Input */}
-      <TextField
-        label="Correct Answer"
+      <Typography>Select Correct Answer</Typography>
+      <Select
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
-      />
+        displayEmpty
+      >
+        {options.map((opt, index) => (
+          <MenuItem key={index} value={opt}>
+            {opt}
+          </MenuItem>
+        ))}
+      </Select>
 
-      {/* Add to Local Storage */}
       <Button variant="contained" onClick={handleAddQuestion}>
-        Add to Local Storage
+        Add Question
       </Button>
+
+      <Divider />
+      <Typography variant="h5">Saved Questions</Typography>
       <List>
         {savedQuestions.map((q, index) => (
           <ListItem key={index}>
@@ -306,7 +293,10 @@ const AddQuestionPage = () => {
               secondary={`Answer: ${q.answer}`}
             />
             <ListItemSecondaryAction>
-              <IconButton onClick={() => handleRemoveQuestion(index)}>
+              <IconButton
+                edge="end"
+                onClick={() => handleRemoveQuestion(index)}
+              >
                 <DeleteIcon />
               </IconButton>
             </ListItemSecondaryAction>
@@ -314,7 +304,6 @@ const AddQuestionPage = () => {
         ))}
       </List>
 
-      {/* Submit to Database */}
       <Button variant="contained" color="primary" onClick={handleFinalSubmit}>
         Final Submit
       </Button>

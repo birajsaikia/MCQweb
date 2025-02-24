@@ -100,18 +100,16 @@ const Admin = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(
-        `https://mc-qweb-backend.vercel.app/user/admin/delate-course/${id}`,
-        {
-          method: 'DELETE',
-        }
+      const response = await axios.delete(
+        `https://mc-qweb-backend.vercel.app/user/admin/delate-course/${id}`
       );
-      if (!response.ok) {
+
+      if (response.status === 200) {
+        // Filter out the deleted course from the `data` state
+        setData((prevData) => prevData.filter((course) => course._id !== id));
+      } else {
         throw new Error('Failed to delete course');
-        console.log(response.error);
       }
-      // Remove the deleted course from the state
-      setCourses(courses.filter((course) => course._id !== id));
     } catch (error) {
       alert(error.message);
     }

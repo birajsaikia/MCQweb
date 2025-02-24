@@ -74,11 +74,17 @@ const AddSubjectPage = () => {
   };
 
   const handleDeleteSubject = async (subjectId) => {
+    console.log('Deleting subject:', courseId, subjectId);
     try {
       await axios.delete(
-        `https://mc-qweb-backend.vercel.app/user/admin/subject/${courseId}`
+        `http://localhost:5000/user/admin/subject/${courseId}/${subjectId}`
       );
-      fetchSubjects();
+
+      // ✅ Update the state immediately instead of waiting for fetchSubjects()
+      setcourseData((prevData) => ({
+        ...prevData,
+        subjects: prevData.subjects.filter((subj) => subj._id !== subjectId),
+      }));
     } catch (error) {
       console.error('Error deleting subject:', error);
     }

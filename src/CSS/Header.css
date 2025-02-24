@@ -6,6 +6,8 @@
   align-items: center;
   padding: 1.5% 3%;
   height: 56px;
+  /* position: fixed; */
+  /* width: 95%; */
 }
 
 .logo h1 {
@@ -44,10 +46,6 @@
   color: white;
 }
 
-.nav-links a:hover {
-  color: #31473a;
-}
-
 /* Mobile View - Hamburger Menu */
 @media (max-width: 768px) {
   .menu-icon {
@@ -77,6 +75,101 @@
 
   .logout-btn {
     cursor: pointer;
+  }
+  /* Default styles - Desktop View */
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  /* Hide menu icon on desktop */
+  .menu-icon {
+    display: none;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .menu-icon {
+      display: block;
+      font-size: 24px;
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+      top: 15px;
+    }
+
+    .nav-links {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 250px; /* Adjust width */
+      background: #ffffff;
+      display: none;
+      flex-direction: column;
+      padding: 10px; /* Reduce padding */
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+    }
+
+    .nav-links.active {
+      display: flex;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nav-links a {
+      width: 100%;
+      /* padding: 10px 15px; Reduce padding */
+      font-size: 16px; /* Reduce font size */
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+      border: none;
+      background: none;
+      display: block;
+      transition: all 0.3s ease-in-out;
+      letter-spacing: 0.5px; /* Reduce letter spacing */
+    }
+
+    .nav-links button {
+      background: #28a745;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      /* padding: 10px; Adjust padding */
+      font-size: 16px; /* Ensure text fits */
+      font-weight: bold;
+      width: 100%;
+      border: none;
+    }
+
+    .nav-links button:hover {
+      background: #218838;
+    }
+
+    .logout-btn {
+      cursor: pointer;
+      font-weight: bold;
+      color: #d9534f;
+      transition: color 0.3s ease-in-out;
+      padding: 8px 0;
+    }
+
+    .logout-btn:hover {
+      color: #c9302c;
+    }
   }
 }
 

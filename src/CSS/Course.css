@@ -1,6 +1,7 @@
 .course-container {
   text-align: center;
   margin-top: 20px;
+  /* background-color: #f9f9f9; */
   /* height: 25vh; */
   /* box-shadow: 0 8px 6px -2px rgba(0, 0, 0, 0.2); */
 }
@@ -78,11 +79,11 @@
 }
 @media (max-width: 600px) {
   .course-list {
-    display: grid;
+    /* display: grid; */
     grid-template-columns: repeat(2, 1fr); /* Two columns */
     gap: 10px;
     justify-content: center; /* Center align items */
-    padding: 0 0 0 4%;
+    /* padding: 0 0 0 4%; */
   }
 
   .course-card {

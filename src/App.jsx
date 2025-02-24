@@ -17,8 +17,9 @@ import Addsubject from './Component/AddSubject';
 import AddCoSubject from './Component/Addcosubject';
 import ViewSubjectPage from './Component/ViewSubject';
 import ViewCoSubject from './Component/ViewCosubject';
-// import Forgetpassword from './Component/forgetpassword';
+import About from './Component/about';
 import Resetpassword from './Component/reset-password';
+import Adminquationview from './Component/Quationviewadmin';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -39,7 +40,7 @@ function App() {
           <Route path="/userprofile" element={<Userprofile />} />
           <Route path="/addquation" element={<Addquation />} />
           <Route path="/course" element={<Course />} />
-          {/* <Route path="/forgetpassword" element={<Forgetpassword />} /> */}
+          <Route path="/about" element={<About />} />
           <Route path="/resetpassword" element={<Resetpassword />} />
 
           <Route
@@ -54,6 +55,11 @@ function App() {
             path="/coursequation/:courseId/:subjectId/:cosubjectId"
             element={<Viewquationuser />}
           />
+          <Route
+            path="/quations/:courseId/:subjectId/:cosubjectId"
+            element={<Adminquationview />}
+          />
+
           <Route path="/viewsubject/:courseId" element={<ViewSubjectPage />} />
           <Route
             path="/viewcosubject/:courseId/:subjectId"

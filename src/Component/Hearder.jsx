@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Cookies from 'js-cookie';
-import '@fortawesome/fontawesome-free/css/all.min.css'; // Import FontAwesome CSS
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import axios from 'axios';
 import '../CSS/Header.css';
 import { Link, NavLink } from 'react-router-dom';
@@ -9,6 +9,8 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const menuIconRef = useRef(null); // Reference for the hamburger icon
 
   useEffect(() => {
     const token = Cookies.get('auth_token');
@@ -40,6 +42,25 @@ const Header = () => {
     window.location.href = '/';
   };
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        menuIconRef.current &&
+        !menuIconRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -51,16 +72,19 @@ const Header = () => {
       </div>
 
       {/* Hamburger Menu for Small Screens */}
-      <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+      <div
+        className="menu-icon"
+        onClick={() => setMenuOpen(!menuOpen)}
+        ref={menuIconRef} // Attach ref to the icon
+      >
         <i className="fas fa-bars"></i>
       </div>
 
       {/* Desktop/Nav Links */}
-      <nav className={`nav-links ${menuOpen ? 'active' : ''}`}>
+      <nav className={`nav-links ${menuOpen ? 'active' : ''}`} ref={menuRef}>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/event">Event</NavLink>
-        {/* <NavLink to="/milestone">Milestone</NavLink> */}
         <NavLink to="/course">Course</NavLink>
         {isLoggedIn ? (
           <>
@@ -68,18 +92,18 @@ const Header = () => {
               <NavLink to="/userprofile">Profile</NavLink>
             </button>
             <button>
-              <p
+              <div
                 onClick={handleLogout}
                 className="logout-btn"
                 style={{
                   color: 'white',
-                  textdecoration: 'none',
+                  textDecoration: 'none',
                   fontWeight: 'bolder',
                   transition: 'color 0.3s ease',
                 }}
               >
                 Logout
-              </p>
+              </div>
             </button>
           </>
         ) : (

@@ -71,9 +71,10 @@ const AddSubjectPage = () => {
   };
 
   const handleDeleteSubject = async (cosubjectId) => {
+    // console.log(`http://localhost:5000/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`)
     try {
       await axios.delete(
-        `https://mc-qweb-backend.vercel.app/course/subject/cosubject/quations/${courseId}/${subjectId}/${cosubjectId}`
+        `http://localhost:5000/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`
       );
       fetchSubjects();
     } catch (error) {
@@ -82,9 +83,7 @@ const AddSubjectPage = () => {
   };
 
   const handleViewQuation = (cosubjectId, cosubjectname) => {
-    navigate(
-      `/${course}/${subject}/${cosubjectname}/quations/${courseId}/${subjectId}/${cosubjectId}`
-    );
+    navigate(`/quations/${courseId}/${subjectId}/${cosubjectId}`);
   };
 
   return (
@@ -130,6 +129,14 @@ const AddSubjectPage = () => {
               >
                 <Typography>{subject.name}</Typography>
                 <Box>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ marginRight: '8px' }}
+                    onClick={() => handleViewQuation(subject._id, subject.name)}
+                  >
+                    View Questions
+                  </Button>
                   <Button
                     variant="outlined"
                     color="error"
