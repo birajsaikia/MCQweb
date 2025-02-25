@@ -67,6 +67,7 @@ img {
 
   .image-container {
     order: -1; /* Moves the image to the top */
+    width: 70%;
   }
 
   .content {
