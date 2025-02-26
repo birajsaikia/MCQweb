@@ -73,7 +73,6 @@ const Header = () => {
         </Link>
       </div>
 
-      {/* Hamburger Menu for Small Screens */}
       <div
         className="menu-icon"
         onClick={() => setMenuOpen(!menuOpen)}
