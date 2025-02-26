@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Cookies from 'js-cookie';
+import logo from '../view/logo.jpg';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import axios from 'axios';
 import '../CSS/Header.css';
@@ -69,7 +70,7 @@ const Header = () => {
     <header className="header">
       <div className="logo">
         <Link to="/">
-          <img src="/src/view/logo.jpg" alt="" />
+          <img src={logo} alt="" />
         </Link>
       </div>
 
