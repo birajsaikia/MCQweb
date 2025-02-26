@@ -17,7 +17,7 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        'http://localhost:5000/user/forgetpassword',
+        'https://mc-qweb-backend.vercel.app/user/forgetpassword',
         { email }
       );
       setMessage(res.data.message);
