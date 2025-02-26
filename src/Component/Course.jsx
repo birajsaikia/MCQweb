@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CircularProgress, Container, Typography } from '@mui/material';
 import '../CSS/Course.css';
+import benner from '../view/SSC.jpg';
 
 const Course = () => {
   const [courses, setCourses] = useState([]);
@@ -90,7 +91,7 @@ const Course = () => {
               }}
             >
               <img
-                src="/src/view/SSC.jpg"
+                src={benner}
                 alt={course.name}
                 style={{
                   width: '100%',
