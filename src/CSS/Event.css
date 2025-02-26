@@ -14,15 +14,29 @@ h1 {
   color: #31473a;
 }
 
-.event-swiper {
-  width: 90%;
-  max-width: 350px; /* Adjust width */
-  margin-top: 20px;
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
 }
 
-.box {
+.box-container {
+  display: flex;
+  gap: 20px;
+  overflow: hidden;
   width: 100%;
-  height: 200px;
+  justify-content: center;
+  position: relative;
+}
+
+/* Increased Box Width */
+.box {
+  width: 350px; /* Increased from 300px */
+  max-width: 350px; /* Adjusted width */
+  height: 220px; /* Adjusted height */
   border: 2px solid #31473a;
   display: flex;
   align-items: center;
@@ -32,24 +46,95 @@ h1 {
   background-image: url(../view/eventposter.jpg);
   background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
 }
 
+/* Ensure text inside box is visible */
 .box div {
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: #000000;
   color: azure;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  opacity: 0.5;
 }
 
-.swiper-pagination-bullet {
-  background-color: #31473a !important; /* Custom dot color */
-}
-
+/* Remove Border Radius on Hover */
 .box:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
+  border-radius: 10px; /* Remove border-radius */
+}
+.box div:hover {
+  /* transform: scale(1.1); */
+  border-radius: 10px; /* Remove border-radius */
+}
+
+/* Arrows */
+.arrow {
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 10px;
+  color: white;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+/* Fix Left Arrow Visibility */
+.arrow.left {
+  left: -50px;
+  z-index: 100;
+  visibility: visible;
+}
+
+/* Right Arrow */
+.arrow.right {
+  right: -50px;
+}
+
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Mobile View */
+@media (max-width: 600px) {
+  .box-container {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .arrow {
+    width: 30px;
+    height: 30px;
+    font-size: 1.5rem;
+  }
+  .arrow.left {
+    left: 10px;
+    z-index: 100;
+    visibility: visible;
+  }
+
+  /* Right Arrow */
+  .arrow.right {
+    right: 10px;
+  }
+  .box {
+    width: 300px;
+    max-width: 300px;
+    height: 200px;
+  }
 }

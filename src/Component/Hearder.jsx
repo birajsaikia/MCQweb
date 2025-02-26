@@ -68,7 +68,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <h1>MCQ.</h1>
+        <Link to="/">
+          <img src="/src/view/logo.jpg" alt="" />
+        </Link>
       </div>
 
       {/* Hamburger Menu for Small Screens */}
