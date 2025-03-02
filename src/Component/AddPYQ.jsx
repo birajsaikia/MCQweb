@@ -7,3 +7,5 @@ const AddPYQ = () => {
     </div>
   );
 };
+
+export default AddPYQ;
