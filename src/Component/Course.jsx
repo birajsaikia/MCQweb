@@ -60,7 +60,7 @@ const Course = () => {
       <div className="course-list">
         {courses.map((course) => (
           <Link
-            to={`/viewsubject/${course._id}`}
+            to={`/subjectlanding/${course._id}`}
             key={course._id}
             className="course-card"
             style={{

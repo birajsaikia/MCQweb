@@ -6,10 +6,11 @@ import Cookies from 'js-cookie';
 
 const AddSubjectPage = () => {
   const [subjectName, setSubjectName] = useState('');
-  const [courseData, setcourseData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [prevYearQuestion, setPrevYearQuestion] = useState('');
   const [isTokenValid, setIsTokenValid] = useState(true);
   const { courseId } = useParams();
-  const { course } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const AddSubjectPage = () => {
       const response = await axios.get(
         `https://mc-qweb-backend.vercel.app/user/admin/subject/${courseId}`
       );
-      setcourseData(response.data);
+      setCourseData(response.data);
     } catch (error) {
       console.error('Error fetching subjects:', error);
     }
@@ -58,12 +59,8 @@ const AddSubjectPage = () => {
       try {
         await axios.post(
           `https://mc-qweb-backend.vercel.app/user/admin/addsubject/${courseId}`,
-          {
-            name: subjectName,
-          },
-          {
-            headers: { 'Content-Type': 'application/json' },
-          }
+          { name: subjectName },
+          { headers: { 'Content-Type': 'application/json' } }
         );
         setSubjectName('');
         fetchSubjects();
@@ -80,8 +77,7 @@ const AddSubjectPage = () => {
         `http://localhost:5000/user/admin/subject/${courseId}/${subjectId}`
       );
 
-      // ✅ Update the state immediately instead of waiting for fetchSubjects()
-      setcourseData((prevData) => ({
+      setCourseData((prevData) => ({
         ...prevData,
         subjects: prevData.subjects.filter((subj) => subj._id !== subjectId),
       }));
@@ -91,7 +87,27 @@ const AddSubjectPage = () => {
   };
 
   const handleViewcoSubject = (subjectId, subjectName) => {
-    navigate(`/${course}/${subjectName}/cosubject/${courseId}/${subjectId}`);
+    navigate(`/course/${courseId}/${subjectName}/cosubject/${subjectId}`);
+  };
+
+  const handleViewSubject = (subject) => {
+    setSelectedSubject(subject);
+  };
+
+  const handleAddPrevYearQuestion = async (subjectId) => {
+    if (prevYearQuestion.trim()) {
+      try {
+        await axios.post(
+          `https://mc-qweb-backend.vercel.app/user/admin/previousyear/${courseId}/${subjectId}`,
+          { name: prevYearQuestion },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        setPrevYearQuestion('');
+        fetchSubjects(); // Refresh subjects to show new Previous Year Questions
+      } catch (error) {
+        console.error('Error adding previous year question:', error);
+      }
+    }
   };
 
   return (
@@ -139,13 +155,21 @@ const AddSubjectPage = () => {
                 <Box>
                   <Button
                     variant="contained"
+                    color="primary"
+                    sx={{ marginRight: '8px' }}
+                    onClick={() => handleViewSubject(subject)}
+                  >
+                    View
+                  </Button>
+                  <Button
+                    variant="contained"
                     color="secondary"
                     sx={{ marginRight: '8px' }}
                     onClick={() =>
                       handleViewcoSubject(subject._id, subject.name)
                     }
                   >
-                    View Subject
+                    View Co-Subjects
                   </Button>
                   <Button
                     variant="outlined"
@@ -159,6 +183,54 @@ const AddSubjectPage = () => {
             ))
           ) : (
             <Typography>No subjects added yet.</Typography>
+          )}
+
+          {/* View Subject Section */}
+          {selectedSubject && (
+            <Box
+              sx={{
+                marginTop: '20px',
+                padding: '16px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+              }}
+            >
+              <Typography variant="h5">
+                Subject: {selectedSubject.name}
+              </Typography>
+
+              {/* Add Previous Year Questions */}
+              <Box sx={{ marginTop: '16px' }}>
+                <TextField
+                  label="Add Previous Year Question Paper"
+                  variant="outlined"
+                  value={prevYearQuestion}
+                  onChange={(e) => setPrevYearQuestion(e.target.value)}
+                  sx={{ marginBottom: '16px', width: '80%' }}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleAddPrevYearQuestion(selectedSubject._id)}
+                >
+                  Add
+                </Button>
+              </Box>
+
+              <Typography variant="h6" sx={{ marginTop: '16px' }}>
+                Previous Year Papers:
+              </Typography>
+              {selectedSubject.previousyears &&
+              selectedSubject.previousyears.length > 0 ? (
+                selectedSubject.previousyears.map((paper) => (
+                  <Typography key={paper._id} sx={{ padding: '8px 0' }}>
+                    📜 {paper.name}
+                  </Typography>
+                ))
+              ) : (
+                <Typography>No previous year papers added.</Typography>
+              )}
+            </Box>
           )}
         </div>
       )}

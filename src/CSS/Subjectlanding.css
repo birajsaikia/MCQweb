@@ -1,0 +1,125 @@
+/* General Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #eef2f7;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main Container */
+.EXAM {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+}
+
+/* Section Boxes - Inline Layout */
+.Contect2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Individual Box */
+.box1 {
+  width: 250px;
+  height: 150px;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.box1:nth-child(2) {
+  background: linear-gradient(135deg, #56ccf2, #2f80ed);
+}
+
+.box1:nth-child(3) {
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+}
+
+.box1:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Active Section Highlight */
+.active {
+  border: 3px solid #ffeb3b;
+}
+
+/* Details Box */
+.details-box {
+  width: 80%;
+  max-width: 900px;
+  min-height: 200px;
+  background: white;
+  border: 3px solid #ff4d79;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.3s ease-in-out;
+  display: none;
+}
+
+/* Show content when active */
+.details-box.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Subject List */
+.subject-list {
+  list-style: none;
+  padding: 0;
+}
+
+.subject-list li {
+  background: #f0f0f0;
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out;
+}
+
+.subject-list li:hover {
+  background: #ff7eb3;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .Contect2 {
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+  }
+
+  .box1 {
+    width: 90%;
+  }
+
+  .details-box {
+    width: 90%;
+  }
+}

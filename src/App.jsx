@@ -20,6 +20,8 @@ import ViewCoSubject from './Component/ViewCosubject';
 import About from './Component/about';
 import Resetpassword from './Component/reset-password';
 import Adminquationview from './Component/Quationviewadmin';
+import Subjectlanding from './Component/Subjectlanding';
+import AddPYQ from './Component/AddPYQ';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -41,6 +43,11 @@ function App() {
           <Route path="/addquation" element={<Addquation />} />
           <Route path="/course" element={<Course />} />
           <Route path="/about" element={<About />} />
+          <Route
+            path="/subjectlanding/:courseId"
+            element={<Subjectlanding />}
+          />
+          <Route path="/addpyq/:courseId" element={<AddPYQ />} />
           <Route path="/resetpassword" element={<Resetpassword />} />
 
           <Route

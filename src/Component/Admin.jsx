@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Typography, Divider, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Divider,
+  TextField,
+  Grid,
+  Paper,
+  IconButton,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Admin = () => {
   const [selectedContent, setSelectedContent] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [courses, setCourses] = useState([]);
   const [newItem, setNewItem] = useState('');
-  const [image, setimage] = useState();
+  const [image, setimage] = useState(null);
   const [data, setData] = useState([]);
   const [isTokenValid, setIsTokenValid] = useState(true);
   const navigate = useNavigate();
@@ -67,12 +77,13 @@ const Admin = () => {
     setIsAdding(false);
     setNewItem('');
   };
+
   const onoutputchange = (e) => {
-    console.log(e.target.files[0]);
     setimage(e.target.files[0]);
   };
+
   const handleAddNew = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     if (!image) {
       console.error('No file selected');
@@ -82,7 +93,6 @@ const Admin = () => {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('name', newItem);
-    console.log(formData);
 
     try {
       await axios.post(
@@ -105,7 +115,6 @@ const Admin = () => {
       );
 
       if (response.status === 200) {
-        // Filter out the deleted course from the `data` state
         setData((prevData) => prevData.filter((course) => course._id !== id));
       } else {
         throw new Error('Failed to delete course');
@@ -116,13 +125,21 @@ const Admin = () => {
   };
 
   const handleViewSubjects = (courseId, coursename) => {
-    // Navigate to the page where you can view all subjects for the selected course
     navigate(`/${coursename}/addsubject/${courseId}`);
+  };
+  const handleViewPYQ = (courseId, coursename) => {
+    navigate(`/${coursename}/addpyq/${courseId}`);
   };
 
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
-      <Box sx={{ width: '200px', backgroundColor: '#f4f4f4', padding: '16px' }}>
+      <Box
+        sx={{
+          width: { xs: '100%', sm: '200px' },
+          backgroundColor: '#f4f4f4',
+          padding: '16px',
+        }}
+      >
         <h1>Admin Page</h1>
         <a href="/addquation">
           <Button
@@ -155,43 +172,53 @@ const Admin = () => {
             <Divider sx={{ margin: '16px 0' }} />
 
             {data.length > 0 ? (
-              data.map((item) => (
-                <Box
-                  key={item._id}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '8px',
-                    borderBottom: '1px solid #ddd',
-                  }}
-                >
-                  <Typography>{item.name}</Typography>
-                  <Box>
-                    {selectedContent === 'course' && (
-                      <>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          sx={{ marginRight: '8px' }}
-                          onClick={() =>
-                            handleViewSubjects(item._id, item.name)
-                          }
-                        >
-                          View Subjects
-                        </Button>
-                      </>
-                    )}
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleDelete(item._id)}
+              <Grid container spacing={2}>
+                {data.map((item) => (
+                  <Grid item xs={12} sm={6} md={4} key={item._id}>
+                    <Paper
+                      elevation={3}
+                      sx={{
+                        padding: '16px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
                     >
-                      Delete
-                    </Button>
-                  </Box>
-                </Box>
-              ))
+                      <Typography>{item.name}</Typography>
+                      <Box>
+                        {selectedContent === 'course' && (
+                          <>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{ marginRight: '8px' }}
+                              onClick={() =>
+                                handleViewSubjects(item._id, item.name)
+                              }
+                            >
+                              View Subjects
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{ marginRight: '8px', marginTop: '8px' }}
+                              onClick={() => handleViewPYQ(item._id, item.name)}
+                            >
+                              View PYQ
+                            </Button>
+                          </>
+                        )}
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDelete(item._id)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
             ) : (
               <Typography>No {selectedContent} added yet.</Typography>
             )}
@@ -206,12 +233,21 @@ const Admin = () => {
               </Button>
             ) : (
               <form onSubmit={handleAddNew} encType="multipart/form-data">
-                <input
-                  type="text"
+                <TextField
+                  label="Name"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
                   onChange={(e) => setNewItem(e.target.value)}
                 />
                 <input type="file" onChange={onoutputchange} />
-                <button type="submit">Add</button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ marginTop: '16px' }}
+                >
+                  Add
+                </Button>
               </form>
             )}
           </div>
