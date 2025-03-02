@@ -35,7 +35,7 @@ function SubjectLanding() {
     if (activeSection === 'previousYear') {
       setLoading(true);
       fetch(
-        `http://localhost:5000/user/admin/getpreviousyearpapers/${courseId}`
+        `https://mc-qweb-backend.vercel.app/user/admin/getpreviousyearpapers/${courseId}`
       )
         .then((response) => {
           if (!response.ok)

@@ -24,7 +24,7 @@ const ViewQuestionsPage = () => {
   const fetchQuestions = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/user/admin/quations/${courseId}/${subjectId}/${cosubjectId}`
+        `https://mc-qweb-backend.vercel.app/user/admin/quations/${courseId}/${subjectId}/${cosubjectId}`
       );
       console.log('Fetched Data:', response.data);
       setQuestions(response.data.quations || []);
@@ -37,7 +37,7 @@ const ViewQuestionsPage = () => {
     console.log(questionId);
     try {
       await axios.delete(
-        `http://localhost:5000/user/admin/quations/${courseId}/${subjectId}/${cosubjectId}/${questionId}`
+        `https://mc-qweb-backend.vercel.app/user/admin/quations/${courseId}/${subjectId}/${cosubjectId}/${questionId}`
       );
       fetchQuestions();
     } catch (error) {
