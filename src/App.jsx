@@ -22,6 +22,11 @@ import Resetpassword from './Component/reset-password';
 import Adminquationview from './Component/Quationviewadmin';
 import Subjectlanding from './Component/Subjectlanding';
 import AddPYQ from './Component/AddPYQ';
+import ViewpyqQuation from './Component/viewPyqquations';
+import AddMockTest from './Component/AddMocktest';
+import ViewMockTest from './Component/AddMocktest';
+import MockTest from './Component/Mocktest';
+import PyqQuation from './Component/PYQquationView';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -47,7 +52,20 @@ function App() {
             path="/subjectlanding/:courseId"
             element={<Subjectlanding />}
           />
-          <Route path="/addpyq/:courseId" element={<AddPYQ />} />
+          <Route path="/:course/addpyq/:courseId" element={<AddPYQ />} />
+          <Route
+            path="/:course/addmocktest/:courseId"
+            element={<AddMockTest />}
+          />
+          <Route
+            path="/viewpyqquation/:courseId/:paperId"
+            element={<ViewpyqQuation />}
+          />
+          <Route
+            path="/viewmocktestquation/:courseId/:paperId"
+            element={<ViewMockTest />}
+          />
+
           <Route path="/resetpassword" element={<Resetpassword />} />
 
           <Route
@@ -63,11 +81,16 @@ function App() {
             element={<Viewquationuser />}
           />
           <Route
+            path="/pyqquation/:name/:year/:courseId/:paperId"
+            element={<PyqQuation />}
+          />
+          <Route
             path="/quations/:courseId/:subjectId/:cosubjectId"
             element={<Adminquationview />}
           />
 
           <Route path="/viewsubject/:courseId" element={<ViewSubjectPage />} />
+          <Route path="/mocktest/:courseId" element={<MockTest />} />
           <Route
             path="/viewcosubject/:courseId/:subjectId"
             element={<ViewCoSubject />}

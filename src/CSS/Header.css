@@ -64,8 +64,9 @@
     flex-direction: column;
   }
 
-  .nav-links.active {
+  .nav-links .active {
     display: flex; /* Display when menu is open */
+    color: #28a745;
   }
 
   .nav-links a {

@@ -56,11 +56,6 @@ body {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Active Section Highlight */
-.active {
-  border: 3px solid #ffeb3b;
-}
-
 /* Details Box */
 .details-box {
   width: 80%;
@@ -91,14 +86,23 @@ body {
 .subject-list {
   list-style: none;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ✅ Exactly two items per row */
+  gap: 10px; /* ✅ Spacing between items */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto; /* ✅ Centering */
+  margin-top: 15px;
 }
 
 .subject-list li {
   background: #f0f0f0;
-  padding: 8px 12px;
-  margin: 5px 0;
+  padding: 12px;
   border-radius: 6px;
   font-size: 16px;
+  text-align: center;
   transition: background 0.3s ease-in-out;
 }
 
@@ -107,19 +111,83 @@ body {
   color: white;
 }
 
+/* ✅ Responsive: On smaller screens, keep two in a row */
+@media (max-width: 400px) {
+  .subject-list {
+    grid-template-columns: repeat(1, 1fr); /* ✅ Stack items in one column */
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .Contect2 {
-    flex-direction: column;
-    align-items: center;
-    width: 100px;
-  }
-
   .box1 {
     width: 90%;
   }
 
   .details-box {
     width: 90%;
+  }
+}
+
+/* Section Boxes - Ensure Inline Layout */
+.Contect2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 900px;
+  flex-wrap: wrap; /* ✅ Ensures it wraps on smaller screens */
+}
+
+/* Adjust Button Sizes */
+.box1 {
+  flex: 1; /* ✅ Makes buttons distribute evenly */
+  min-width: 150px; /* ✅ Prevents them from getting too small */
+  height: 60px; /* ✅ Adjust height for better alignment */
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.box1:nth-child(2) {
+  background: linear-gradient(135deg, #56ccf2, #2f80ed);
+}
+
+.box1:nth-child(3) {
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+}
+
+.box1:hover {
+  transform: translateY(-5px);
+}
+
+/* ✅ Make it Responsive */
+@media (max-width: 768px) {
+  .Contect2 {
+    flex-direction: row; /* ✅ Ensures it remains in line */
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .Contect2 div {
+    height: 100px; /* ✅ Adjust height for better alignment */
+  }
+  .Contect2 h2 {
+    font-size: 20px;
+  }
+  .box1 {
+    flex: 1;
+    min-width: 100px; /* ✅ Ensures it doesn’t get too small */
+    height: 50px;
+    font-size: 16px;
   }
 }

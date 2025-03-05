@@ -141,12 +141,14 @@ const Userprofile = () => {
                   referral link is:
                 </p>
                 <div className="referral-code">
-                  <span>http://127.0.0.1:5173/signup/{referralCode}</span>
+                  <span>
+                    https://mc-qweb-backend.vercel.app/signup/{referralCode}
+                  </span>
                   <button
                     className="copy-btn"
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `http://127.0.0.1:5173/signup/${referralCode}`
+                        `https://mc-qweb-backend.vercel.app/signup/${referralCode}`
                       )
                     }
                   >

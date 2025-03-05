@@ -2,30 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
-const AddPYQ = () => {
-  const [pyqs, setPyqs] = useState([]);
-  const [newPYQ, setNewPYQ] = useState({
-    year: '',
+const AddMockTest = () => {
+  const { courseId } = useParams();
+  const [mockTests, setMockTests] = useState([]);
+  const [newMockTest, setNewMockTest] = useState({
     name: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { courseId } = useParams();
 
-  // Fetch PYQs from the backend
+  // Fetch Mock Tests from the backend
   useEffect(() => {
-    const fetchPYQs = async () => {
+    const fetchMockTests = async () => {
       try {
         const response = await axios.get(
-          `https://mc-qweb-backend.vercel.app/user/admin/getpreviousyearpapers/${courseId}`
+          `https://mc-qweb-backend.vercel.app/user/admin/getmocktests/${courseId}`
         );
-
-        const formattedPYQs = response.data.map((pyq) => ({
-          ...pyq,
-          combinedName: `${pyq.name} - ${pyq.year}`,
-        }));
-
-        setPyqs(formattedPYQs);
+        setMockTests(response.data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -34,115 +27,101 @@ const AddPYQ = () => {
     };
 
     if (courseId) {
-      fetchPYQs();
+      fetchMockTests();
     }
   }, [courseId]);
 
   // Handle input changes
   const handleChange = (e) => {
-    setNewPYQ({ ...newPYQ, [e.target.name]: e.target.value });
+    setNewMockTest({ ...newMockTest, [e.target.name]: e.target.value });
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newPYQ.year || !newPYQ.name) {
-      alert('Please fill all fields!');
+    if (!newMockTest.name) {
+      alert('Please enter the Mock Test name!');
       return;
     }
 
     try {
       const { data } = await axios.post(
-        `https://mc-qweb-backend.vercel.app/user/admin/addpreviousyearpaper/${courseId}`,
-        newPYQ
+        `https://mc-qweb-backend.vercel.app/user/admin/addmocktest/${courseId}`,
+        newMockTest
       );
 
-      setPyqs([
-        ...pyqs,
-        {
-          name: newPYQ.name,
-          year: newPYQ.year,
-          combinedName: `${newPYQ.name} - ${newPYQ.year}`,
-          _id: data._id, // Assuming the backend returns an _id
-        },
+      setMockTests([
+        ...mockTests,
+        { name: newMockTest.name, _id: data.mockTest._id },
       ]);
+      setNewMockTest({ name: '' });
 
-      setNewPYQ({ year: '', name: '' });
-
-      alert('PYQ Added Successfully!');
+      alert('Mock Test Added Successfully!');
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to add PYQ');
+      alert(error.response?.data?.message || 'Failed to add Mock Test');
     }
   };
 
-  // Handle deleting a PYQ
+  // Handle deleting a Mock Test
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this PYQ?')) return;
+    if (!window.confirm('Are you sure you want to delete this Mock Test?'))
+      return;
 
     try {
       await axios.delete(
-        `https://mc-qweb-backend.vercel.app/user/admin/deletepreviousyearpaper/${courseId}/${id}`
+        `https://mc-qweb-backend.vercel.app/user/admin/deletemocktest/${courseId}/${id}`
       );
 
-      setPyqs(pyqs.filter((pyq) => pyq._id !== id));
-      alert('PYQ Deleted Successfully!');
+      setMockTests(mockTests.filter((mockTest) => mockTest._id !== id));
+      alert('Mock Test Deleted Successfully!');
     } catch (error) {
-      alert('Failed to delete PYQ');
+      alert('Failed to delete Mock Test');
     }
   };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.heading}>📚 Previous Year Question Papers</h1>
+      <h1 style={styles.heading}>📝 Mock Test Management</h1>
 
-      {/* Add PYQ Form */}
+      {/* Add Mock Test Form */}
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
           <input
             type="text"
-            name="year"
-            placeholder="Enter Year (e.g., 2023)"
-            value={newPYQ.year}
-            onChange={handleChange}
-            required
-            style={styles.input}
-          />
-          <input
-            type="text"
             name="name"
-            placeholder="Enter name"
-            value={newPYQ.name}
+            placeholder="Enter Mock Test Name"
+            value={newMockTest.name}
             onChange={handleChange}
             required
             style={styles.input}
           />
           <button type="submit" style={styles.button}>
-            ➕ Add PYQ
+            ➕ Add Mock Test
           </button>
         </div>
       </form>
 
       {/* Loading/Error Messages */}
-      {loading && <p style={styles.message}>Loading PYQs...</p>}
+      {loading && <p style={styles.message}>Loading Mock Tests...</p>}
       {error && <p style={{ ...styles.message, color: 'red' }}>{error}</p>}
 
-      {/* Display Added PYQs */}
+      {/* Display Added Mock Tests */}
       <div style={styles.listContainer}>
-        <h2 style={styles.subHeading}>📝 Available PYQs</h2>
-        {pyqs.length === 0 ? (
-          <p style={styles.message}>No PYQs available.</p>
+        <h2 style={styles.subHeading}>📌 Available Mock Tests</h2>
+        {mockTests.length === 0 ? (
+          <p style={styles.message}>No Mock Tests available.</p>
         ) : (
           <ul style={styles.list}>
-            {pyqs.map((pyq) => (
-              <li key={pyq._id} style={styles.listItem}>
-                <span>{pyq.combinedName}</span>
+            {mockTests.map((mockTest) => (
+              <li key={mockTest._id} style={styles.listItem}>
+                <span>{mockTest.name}</span>
                 <div>
-                  <Link to={`/viewpyqquation/${courseId}/${pyq._id}`}>
+                  <Link to={`/viewmocktestquation/${courseId}/${mockTest._id}`}>
                     <button style={styles.viewButton}>🔍 View Questions</button>
                   </Link>
                   <button
                     style={styles.deleteButton}
-                    onClick={() => handleDelete(pyq._id)}
+                    onClick={() => handleDelete(mockTest._id)}
                   >
                     ❌ Delete
                   </button>
@@ -249,4 +228,4 @@ const styles = {
   },
 };
 
-export default AddPYQ;
+export default AddMockTest;

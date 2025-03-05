@@ -36,7 +36,7 @@ const Login = () => {
       );
 
       // Store the JWT token in cookies
-      Cookies.set('auth_token', response.data.token, { expires: 1 }); // Store token for 1 day
+      Cookies.set('auth_token', response.data.token, { expires: 7 }); // Store token for 1 day
 
       setServerMessage({
         type: 'success',
@@ -45,8 +45,9 @@ const Login = () => {
 
       // Redirect to the home page or dashboard
       setTimeout(() => {
-        window.location.href = '/'; // Replace with the route where you want to redirect
-      }, 2000);
+        window.location.reload();
+        window.location.href = '/'; // Redirect to home page
+      }, 1000);
     } catch (err) {
       setServerMessage({
         type: 'error',

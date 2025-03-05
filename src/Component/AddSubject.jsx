@@ -10,7 +10,7 @@ const AddSubjectPage = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [prevYearQuestion, setPrevYearQuestion] = useState('');
   const [isTokenValid, setIsTokenValid] = useState(true);
-  const { courseId } = useParams();
+  const { courseId, course } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const AddSubjectPage = () => {
     if (subjectName.trim()) {
       try {
         await axios.post(
-          `https://mc-qweb-backend.vercel.app/user/admin/addsubject/${courseId}`,
+          `https://mc-qweb-backend.vercel.app/user/admin/addsubject/${courseId}/${courseId}`,
           { name: subjectName },
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -74,7 +74,7 @@ const AddSubjectPage = () => {
     console.log('Deleting subject:', courseId, subjectId);
     try {
       await axios.delete(
-        `http://localhost:5000/user/admin/subject/${courseId}/${subjectId}`
+        `https://mc-qweb-backend.vercel.app/user/admin/subject/${courseId}/${subjectId}`
       );
 
       setCourseData((prevData) => ({
@@ -87,7 +87,7 @@ const AddSubjectPage = () => {
   };
 
   const handleViewcoSubject = (subjectId, subjectName) => {
-    navigate(`/course/${courseId}/${subjectName}/cosubject/${subjectId}`);
+    navigate(`/${course}/${subjectName}/cosubject/${courseId}/${subjectId}`);
   };
 
   const handleViewSubject = (subject) => {

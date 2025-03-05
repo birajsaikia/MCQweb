@@ -1,0 +1,133 @@
+/* AdminPYQPage.css */
+.admin-pyq-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+  border-radius: 8px; /* Rounded corners for the container */
+  background-color: #f8f9fa; /* Light background color */
+}
+
+.admin-pyq-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 28px; /* Increased title size */
+  font-weight: 600; /* Slightly bolder font weight */
+  color: #333; /* Darker text color */
+}
+
+.admin-pyq-toggle-button {
+  width: 100%;
+  padding: 12px 15px; /* Increased padding for better touch targets */
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px; /* Slightly more rounded corners */
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.admin-pyq-toggle-button:hover {
+  background-color: #2980b9; /* Darker blue on hover */
+}
+
+.admin-pyq-form-container {
+  border: 1px solid #ddd;
+  padding: 25px; /* Increased padding */
+  margin-bottom: 20px;
+  background-color: #fff; /* White background for form */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-pyq-form-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #444;
+  font-weight: 500;
+}
+
+.admin-pyq-input,
+.admin-pyq-select {
+  width: calc(100% - 20px); /* Adjust width for padding */
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.admin-pyq-save-button,
+.admin-pyq-delete-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.admin-pyq-save-button {
+  background-color: #2ecc71;
+}
+
+.admin-pyq-save-button:hover {
+  background-color: #27ae60;
+}
+
+.admin-pyq-delete-button {
+  background-color: #e74c3c;
+  margin-top: 15px;
+}
+
+.admin-pyq-delete-button:hover {
+  background-color: #c0392b;
+}
+
+.admin-pyq-list-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 500;
+}
+
+.admin-pyq-question-list {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-pyq-question-item {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+}
+
+.admin-pyq-option-list {
+  list-style: none;
+  padding: 10px 0;
+}
+
+.admin-pyq-option-item {
+  padding: 5px 0;
+  font-size: 16px;
+}
+
+.admin-pyq-correct-answer {
+  font-weight: 600;
+  color: #27ae60;
+}
+
+.admin-pyq-loading,
+.admin-pyq-error,
+.admin-pyq-no-questions {
+  text-align: center;
+  margin: 20px 0;
+  color: #777;
+}
+
+.admin-pyq-error {
+  color: #e74c3c;
+}

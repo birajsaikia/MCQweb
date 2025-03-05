@@ -130,7 +130,9 @@ const Admin = () => {
   const handleViewPYQ = (courseId, coursename) => {
     navigate(`/${coursename}/addpyq/${courseId}`);
   };
-
+  const handleViewMT = (courseId, coursename) => {
+    navigate(`/${coursename}/addmocktest/${courseId}`);
+  };
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <Box
@@ -197,6 +199,14 @@ const Admin = () => {
                               }
                             >
                               View Subjects
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{ marginRight: '8px', marginTop: '8px' }}
+                              onClick={() => handleViewMT(item._id, item.name)}
+                            >
+                              View Mocktest
                             </Button>
                             <Button
                               variant="contained"
