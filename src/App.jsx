@@ -27,6 +27,10 @@ import AddMockTest from './Component/AddMocktest';
 import ViewMockTest from './Component/AddMocktest';
 import MockTest from './Component/Mocktest';
 import PyqQuation from './Component/PYQquationView';
+import Jointevent from './Component/JoinEvent';
+import EventQuationAdd from './Component/EventQuationAdd';
+import TopRank from './Component/TopRank';
+import AdminNotice from './Component/AdminNotice';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -88,13 +92,17 @@ function App() {
             path="/quations/:courseId/:subjectId/:cosubjectId"
             element={<Adminquationview />}
           />
-
+          <Route path="/joinevent/:eventId" element={<Jointevent />} />
           <Route path="/viewsubject/:courseId" element={<ViewSubjectPage />} />
           <Route path="/mocktest/:courseId" element={<MockTest />} />
           <Route
             path="/viewcosubject/:courseId/:subjectId"
             element={<ViewCoSubject />}
           />
+          <Route path="/eventquation/:eventId" element={<EventQuationAdd />} />
+          <Route path="/toprank/:eventId" element={<TopRank />} />
+
+          <Route path="/addnotice/:courseId" element={<AdminNotice />} />
         </Routes>
       </Router>
     </>

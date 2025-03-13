@@ -122,6 +122,7 @@ body {
 @media (max-width: 768px) {
   .box1 {
     width: 90%;
+    height: 60px;
   }
 
   .details-box {
@@ -144,7 +145,7 @@ body {
 .box1 {
   flex: 1; /* ✅ Makes buttons distribute evenly */
   min-width: 150px; /* ✅ Prevents them from getting too small */
-  height: 60px; /* ✅ Adjust height for better alignment */
+  /* ✅ Adjust height for better alignment */
   background: linear-gradient(135deg, #ff7eb3, #ff758c);
   color: white;
   display: flex;

@@ -17,11 +17,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const Admin = () => {
   const [selectedContent, setSelectedContent] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-  const [courses, setCourses] = useState([]);
   const [newItem, setNewItem] = useState('');
-  const [image, setimage] = useState(null);
-  const [data, setData] = useState([]);
+  const [image, setImage] = useState(null);
+  const [events, setEvents] = useState([]); // State for events
+  const [courses, setCourses] = useState([]); // State for courses
+  const [milestones, setMilestones] = useState([]); // State for milestones
   const [isTokenValid, setIsTokenValid] = useState(true);
+  const [description, setDescription] = useState('');
+  const [time, setTime] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +33,7 @@ const Admin = () => {
 
   useEffect(() => {
     if (selectedContent) {
-      fetchData();
+      fetchData(selectedContent);
     }
   }, [selectedContent]);
 
@@ -61,32 +64,58 @@ const Admin = () => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (content) => {
     try {
-      const response = await axios.get(
-        `https://mc-qweb-backend.vercel.app/user/admin/${selectedContent}`
-      );
-      setData(response.data);
+      let endpoint;
+      if (content === 'event') {
+        endpoint = 'https://mc-qweb-backend.vercel.app/user/useevent/events';
+      } else if (content === 'course') {
+        endpoint = 'https://mc-qweb-backend.vercel.app/user/admin/course';
+      } else if (content === 'milestone') {
+        endpoint = 'https://mc-qweb-backend.vercel.app/user/admin/milestone';
+      } else {
+        console.error('Invalid content type');
+        return;
+      }
+
+      const response = await axios.get(endpoint);
+      console.log('Fetched Data for', content, ':', response.data); // Debugging line
+
+      // Update the corresponding state variable
+      if (content === 'event') {
+        setEvents(response.data);
+      } else if (content === 'course') {
+        setCourses(response.data);
+      } else if (content === 'milestone') {
+        setMilestones(response.data);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
   const handleButtonClick = (content) => {
+    console.log('Selected Content:', content); // Debugging line
     setSelectedContent(content);
     setIsAdding(false);
     setNewItem('');
+    setDescription('');
+    setTime('');
+    setImage(null);
   };
 
-  const onoutputchange = (e) => {
-    setimage(e.target.files[0]);
+  const onImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
   const handleAddNew = async (e) => {
     e.preventDefault();
 
-    if (!image) {
-      console.error('No file selected');
+    if (
+      selectedContent === 'event' &&
+      (!image || !newItem || !description || !time)
+    ) {
+      console.error('All fields are required');
       return;
     }
 
@@ -94,15 +123,40 @@ const Admin = () => {
     formData.append('image', image);
     formData.append('name', newItem);
 
+    if (selectedContent === 'event') {
+      formData.append('description', description);
+      formData.append('time', time);
+    }
+
     try {
-      await axios.post(
-        `https://mc-qweb-backend.vercel.app/user/admin/add-course`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
+      let endpoint;
+      if (selectedContent === 'event') {
+        endpoint = 'https://mc-qweb-backend.vercel.app/user/useevent/events';
+      } else if (selectedContent === 'course') {
+        endpoint = 'https://mc-qweb-backend.vercel.app/user/admin/add-course';
+      } else if (selectedContent === 'milestone') {
+        endpoint =
+          'https://mc-qweb-backend.vercel.app/user/admin/add-milestone';
+      }
+
+      console.log('Sending request to:', endpoint); // Debugging line
+      console.log('Form Data:', formData); // Debugging line
+
+      const response = await axios.post(endpoint, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      console.log('Response:', response.data); // Debugging line
+
+      // Reset form fields
       setIsAdding(false);
-      setimage(null);
-      fetchData();
+      setImage(null);
+      setNewItem('');
+      setDescription('');
+      setTime('');
+
+      // Refetch data to update the UI
+      fetchData(selectedContent);
     } catch (error) {
       console.error('Error adding item:', error);
     }
@@ -110,14 +164,30 @@ const Admin = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(
-        `https://mc-qweb-backend.vercel.app/user/admin/delate-course/${id}`
-      );
+      let endpoint;
+      if (selectedContent === 'event') {
+        endpoint = `https://mc-qweb-backend.vercel.app/user/useevent/events/${id}`;
+      } else if (selectedContent === 'course') {
+        endpoint = `https://mc-qweb-backend.vercel.app/user/admin/delate-course/${id}`;
+      } else if (selectedContent === 'milestone') {
+        endpoint = `https://mc-qweb-backend.vercel.app/user/admin/delete-milestone/${id}`;
+      }
+
+      const response = await axios.delete(endpoint);
 
       if (response.status === 200) {
-        setData((prevData) => prevData.filter((course) => course._id !== id));
+        // Update the corresponding state variable
+        if (selectedContent === 'event') {
+          setEvents((prevData) => prevData.filter((item) => item._id !== id));
+        } else if (selectedContent === 'course') {
+          setCourses((prevData) => prevData.filter((item) => item._id !== id));
+        } else if (selectedContent === 'milestone') {
+          setMilestones((prevData) =>
+            prevData.filter((item) => item._id !== id)
+          );
+        }
       } else {
-        throw new Error('Failed to delete course');
+        throw new Error('Failed to delete item');
       }
     } catch (error) {
       alert(error.message);
@@ -127,12 +197,30 @@ const Admin = () => {
   const handleViewSubjects = (courseId, coursename) => {
     navigate(`/${coursename}/addsubject/${courseId}`);
   };
+
   const handleViewPYQ = (courseId, coursename) => {
     navigate(`/${coursename}/addpyq/${courseId}`);
   };
+  const handleViewNotice = (courseId, coursename) => {
+    navigate(`/addnotice/${courseId}`);
+  };
+
   const handleViewMT = (courseId, coursename) => {
     navigate(`/${coursename}/addmocktest/${courseId}`);
   };
+
+  // Get the data for the selected section
+  const getDataForSelectedContent = () => {
+    if (selectedContent === 'event') {
+      return events;
+    } else if (selectedContent === 'course') {
+      return courses;
+    } else if (selectedContent === 'milestone') {
+      return milestones;
+    }
+    return [];
+  };
+
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <Box
@@ -149,7 +237,7 @@ const Admin = () => {
             variant="contained"
             sx={{ marginBottom: '8px', marginTop: '12px' }}
           >
-            Add Quations
+            Add Questions
           </Button>
         </a>
         {['event', 'milestone', 'course'].map((section) => (
@@ -173,9 +261,9 @@ const Admin = () => {
             </Typography>
             <Divider sx={{ margin: '16px 0' }} />
 
-            {data.length > 0 ? (
+            {getDataForSelectedContent().length > 0 ? (
               <Grid container spacing={2}>
-                {data.map((item) => (
+                {getDataForSelectedContent().map((item) => (
                   <Grid item xs={12} sm={6} md={4} key={item._id}>
                     <Paper
                       elevation={3}
@@ -188,6 +276,18 @@ const Admin = () => {
                     >
                       <Typography>{item.name}</Typography>
                       <Box>
+                        {selectedContent === 'event' && (
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{ marginRight: '8px', marginTop: '8px' }}
+                            onClick={() =>
+                              navigate(`/eventquation/${item._id}`)
+                            } // Redirect to add question page
+                          >
+                            Add Questions
+                          </Button>
+                        )}
                         {selectedContent === 'course' && (
                           <>
                             <Button
@@ -215,6 +315,14 @@ const Admin = () => {
                               onClick={() => handleViewPYQ(item._id, item.name)}
                             >
                               View PYQ
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{ marginRight: '8px', marginTop: '8px' }}
+                              onClick={() => handleViewNotice(item._id)}
+                            >
+                              Notice
                             </Button>
                           </>
                         )}
@@ -250,7 +358,26 @@ const Admin = () => {
                   margin="normal"
                   onChange={(e) => setNewItem(e.target.value)}
                 />
-                <input type="file" onChange={onoutputchange} />
+                {selectedContent === 'event' && (
+                  <>
+                    <TextField
+                      label="Description"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <TextField
+                      label="Time (in minutes)"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      type="number"
+                      onChange={(e) => setTime(e.target.value)}
+                    />
+                  </>
+                )}
+                <input type="file" onChange={onImageChange} />
                 <Button
                   type="submit"
                   variant="contained"

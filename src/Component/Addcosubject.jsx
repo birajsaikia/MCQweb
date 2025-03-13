@@ -71,10 +71,10 @@ const AddSubjectPage = () => {
   };
 
   const handleDeleteSubject = async (cosubjectId) => {
-    // console.log(`http://localhost:5000/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`)
+    // console.log(`https://mc-qweb-backend.vercel.app/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`)
     try {
       await axios.delete(
-        `http://localhost:5000/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`
+        `https://mc-qweb-backend.vercel.app/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`
       );
       fetchSubjects();
     } catch (error) {

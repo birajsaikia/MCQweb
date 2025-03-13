@@ -19,6 +19,7 @@ const Course = () => {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
+        console.log(data);
         setCourses(data);
       } catch (error) {
         setError(error.message);
@@ -91,7 +92,11 @@ const Course = () => {
               }}
             >
               <img
-                src={benner}
+                src={
+                  course.image?.startsWith('http')
+                    ? course.image
+                    : `http://mc-qweb-backend.vercel.app/uploads/${course.image}`
+                }
                 alt={course.name}
                 style={{
                   width: '100%',

@@ -96,3 +96,32 @@
     justify-self: center; /* Center align */
   }
 }
+@media (max-width: 600px) {
+  .course-list {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(
+      2,
+      minmax(140px, 1fr)
+    ); /* Two equal columns */
+    gap: 15px;
+    justify-content: center; /* Center align items */
+    align-items: center; /* Align items vertically */
+    padding: 10px 40px; /* Add padding to avoid screen edges */
+  }
+
+  .course-card {
+    width: 140px; /* Adjusted width */
+    height: 150px;
+    margin: 0 auto; /* Center the cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* If there's an odd number of courses, center the last one */
+  .course-list .course-card:nth-child(odd):last-child {
+    grid-column: span 2; /* Make it take full width */
+    justify-self: center; /* Center align */
+  }
+}

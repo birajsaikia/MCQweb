@@ -64,10 +64,19 @@ img {
     text-align: center;
     padding: 0 6% 10%;
   }
-
+  h1 {
+    font-size: 2.25rem;
+    color: #272343;
+  }
+  p {
+    margin-top: 4%;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: black;
+  }
   .image-container {
     order: -1; /* Moves the image to the top */
-    width: 70%;
+    width: 55%;
   }
 
   .content {

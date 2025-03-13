@@ -93,7 +93,7 @@ const Header = () => {
             <button>
               <NavLink to="/userprofile">Profile</NavLink>
             </button>
-            <button>
+            <button style={{ width: '100%', textAlign: 'center' }}>
               <div
                 onClick={handleLogout}
                 className="logout-btn"
