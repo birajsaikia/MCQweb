@@ -75,7 +75,9 @@ function SubjectLanding() {
   useEffect(() => {
     if (activeSection === 'notice') {
       setLoading(true);
-      fetch(`http://localhost:5000/user/admin/notice/notices/${courseId}`)
+      fetch(
+        `https://mc-qweb-backend.vercel.app/user/admin/notice/notices/${courseId}`
+      )
         .then((response) => {
           if (!response.ok) throw new Error('No notices available.');
           return response.json();
