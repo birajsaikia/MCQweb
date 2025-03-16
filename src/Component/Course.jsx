@@ -85,6 +85,7 @@ const Course = () => {
                 borderRadius: '50%',
                 margin: '-70px 0 20px 0',
                 overflow: 'hidden',
+                backgroundColor: '#f5f5f5',
                 display: 'flex',
                 color: '#393b4b',
                 alignItems: 'center',

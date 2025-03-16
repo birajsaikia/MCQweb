@@ -2,10 +2,11 @@ footer {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap; /* Allows wrapping for smaller screens */
-  padding: 2% 5%;
+  padding: 2% 7%;
   background-color: #2d3e37;
   color: #fff;
   margin-top: 3%;
+  /* font-weight: bold; */
 }
 
 /* Footer sections */
@@ -14,7 +15,12 @@ footer {
 .footer-right {
   width: 30%;
 }
-
+.footer-center {
+  margin-left: 6%;
+}
+.footer-right {
+  margin-left: 4%;
+}
 /* Text Styling */
 .h1 {
   font-size: 1.8rem;

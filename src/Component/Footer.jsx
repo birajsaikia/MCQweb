@@ -1,5 +1,6 @@
 import React from 'react';
 import '../CSS/Footer.css';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -42,6 +43,32 @@ const Footer = () => {
       </div>
       <div className="footer-right">
         <h2 className="h1">Page</h2>
+        <p className="footer-contact">
+          <Link to="/about" style={{ color: '#fff', fontWeight: 'normal' }}>
+            <i className="fas fa-info-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp; About
+            Page
+          </Link>
+        </p>
+        <p className="footer-contact">
+          <Link to="/course" style={{ color: '#fff', fontWeight: 'normal' }}>
+            <i className="fas fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp; Course Page
+          </Link>
+        </p>
+        <p className="footer-contact">
+          <Link to="/event" style={{ color: '#fff', fontWeight: 'normal' }}>
+            <i className="fas fa-calendar-alt"> </i>&nbsp;&nbsp;&nbsp;&nbsp;
+            Event Page{' '}
+          </Link>
+        </p>
+        <p className="footer-contact">
+          <Link
+            to="/userprofile"
+            style={{ color: '#fff', fontWeight: 'normal' }}
+          >
+            {' '}
+            <i className="fas fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp; Profile Page
+          </Link>
+        </p>
       </div>
     </footer>
   );

@@ -121,6 +121,9 @@ const EventPage = () => {
       alert('You need to refer 3 people to register for this event.');
     }
   };
+  const joinedEvent = async (eventId) => {
+    navigate(`/aboutevent/${eventId}`);
+  };
   const handleRenkEvent = async (eventId) => {
     navigate(`/toprank/${eventId}`);
   };
@@ -149,7 +152,7 @@ const EventPage = () => {
     return <Typography>No events available.</Typography>;
 
   return (
-    <Container maxWidth="md" sx={{ mt: 5 }}>
+    <Container maxWidth="md" sx={{ mt: 2 }}>
       <Typography variant="h4" gutterBottom textAlign="center">
         Current Events
       </Typography>
@@ -159,16 +162,16 @@ const EventPage = () => {
         textAlign="center"
         sx={{ color: referralCount >= 3 ? 'green' : 'red', mb: 3 }}
       >
-        Your Referral Count: {referralCount}/3
+        {/* Your Referral Count: {referralCount}/3 */}
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} style={{ justifyContent: 'center' }}>
         {filteredEvents.map((event) => (
           <Grid item xs={12} sm={6} md={4} key={event._id}>
             <Card sx={{ p: 2, boxShadow: 3 }}>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  {event.name}
+                  {/* {event.name} */}
                 </Typography>
                 <img
                   src={event.image}
@@ -180,7 +183,7 @@ const EventPage = () => {
                   }}
                 />
                 <Typography variant="body2" sx={{ mt: 2 }}>
-                  {event.description}
+                  {/* {event.description} */}
                 </Typography>
 
                 {joinedEvents.includes(event._id) ? (
@@ -199,8 +202,7 @@ const EventPage = () => {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    onClick={() => handleJoinEvent(event._id)}
-                    disabled={referralCount < 3}
+                    onClick={() => joinedEvent(event._id)}
                     sx={{
                       mt: 2,
                       py: 1,

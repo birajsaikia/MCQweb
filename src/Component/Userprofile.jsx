@@ -6,6 +6,7 @@ import '../CSS/Userprofile.css';
 import Header from './Hearder';
 import Footer from './Footer';
 import Course from './Course';
+import ProfilePic from '../view/user.png';
 
 const Userprofile = () => {
   const navigate = useNavigate();
@@ -98,7 +99,9 @@ const Userprofile = () => {
       <div className="dashboard-container">
         <div className="content1">
           <div className="profile-section">
-            <div className="profile-pic"></div>
+            <div className="profile-pic">
+              <img src={ProfilePic} alt="" style={{ width: '100%' }} />
+            </div>
 
             <div className="profile-info">
               <label className="profile-label">Username :</label>

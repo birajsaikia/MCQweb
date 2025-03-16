@@ -31,6 +31,7 @@ import Jointevent from './Component/JoinEvent';
 import EventQuationAdd from './Component/EventQuationAdd';
 import TopRank from './Component/TopRank';
 import AdminNotice from './Component/AdminNotice';
+import Aboutevent from './Component/aboutevent';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -103,6 +104,7 @@ function App() {
           <Route path="/toprank/:eventId" element={<TopRank />} />
 
           <Route path="/addnotice/:courseId" element={<AdminNotice />} />
+          <Route path="/aboutevent/:eventId" element={<Aboutevent />} />
         </Routes>
       </Router>
     </>

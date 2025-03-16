@@ -58,7 +58,7 @@ const AddSubjectPage = () => {
     if (subjectName.trim()) {
       try {
         await axios.post(
-          `https://mc-qweb-backend.vercel.app/user/admin/addsubject/${courseId}/${courseId}`,
+          `https://mc-qweb-backend.vercel.app/user/admin/addsubject/${courseId}`,
           { name: subjectName },
           { headers: { 'Content-Type': 'application/json' } }
         );

@@ -175,7 +175,7 @@ const JoinedEventPage = () => {
         {timeLeft % 60 < 10 ? `0${timeLeft % 60}` : timeLeft % 60}
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} style={{ justifyContent: 'center' }}>
         {questions.map((question) => (
           <Grid item key={question._id} xs={12} sm={6} md={4}>
             <Card>

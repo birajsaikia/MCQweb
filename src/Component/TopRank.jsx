@@ -106,8 +106,8 @@ const EventLeaderboard = () => {
           display: 'block',
           margin: '0 auto',
           width: 'auto',
-          maxWidth: 'auto',
-          height: '200px',
+          maxWidth: '40%',
+          // height: '200px',
           borderRadius: '10px',
         }}
       />

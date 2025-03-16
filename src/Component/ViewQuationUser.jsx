@@ -8,6 +8,10 @@ import {
   Typography,
   CircularProgress,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -22,6 +26,8 @@ const ViewQuestionUser = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState('');
+  const [showDialog, setShowDialog] = useState(false); // Popup visibility
+  const [showResults, setShowResults] = useState(false); // To keep results visible after closing
 
   useEffect(() => {
     const token = Cookies.get('auth_token');
@@ -83,12 +89,15 @@ const ViewQuestionUser = () => {
   const handleAnswerSelection = (questionId, selectedOption) => {
     setSelectedAnswers((prev) => ({
       ...prev,
-      [questionId]: selectedOption, // Only store selected answer
+      [questionId]: selectedOption, // Store selected answer
     }));
   };
 
   const handleSubmit = async () => {
     setSubmitted(true);
+    setShowDialog(true); // Open the popup
+    setShowResults(true); // Keep results visible after closing
+
     const correctAnswersCount = questions.filter(
       (q) => selectedAnswers[q._id] === q.correctOption
     ).length;
@@ -188,32 +197,12 @@ const ViewQuestionUser = () => {
                     </Button>
                   );
                 })}
-
-                {/* Show correct answer only after submitting */}
-                {submitted && (
-                  <Typography
-                    variant="body2"
-                    style={{
-                      marginTop: '10px',
-                      color:
-                        selectedAnswers[question._id] === question.correctOption
-                          ? 'green'
-                          : 'red',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {selectedAnswers[question._id] === question.correctOption
-                      ? 'Correct! ✅'
-                      : `Wrong! ❌ Correct: ${question.correctOption}`}
-                  </Typography>
-                )}
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
 
-      {/* Submit Button */}
       {!submitted && (
         <Button
           variant="contained"
@@ -234,26 +223,48 @@ const ViewQuestionUser = () => {
         </Button>
       )}
 
-      {/* Show Results */}
-      {submitted && (
-        <Typography
-          variant="h6"
-          align="center"
-          style={{
-            marginTop: '30px',
-            backgroundColor: '#f0f8ff',
-            padding: '15px',
-            borderRadius: '10px',
-            color: '#333',
-          }}
-        >
-          You answered{' '}
-          {
-            questions.filter((q) => selectedAnswers[q._id] === q.correctOption)
-              .length
-          }{' '}
-          out of {questions.length} questions correctly!
-        </Typography>
+      {/* Popup Dialog for Answers */}
+      <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
+        <DialogTitle>Your Results</DialogTitle>
+        <DialogContent>
+          <Typography>
+            You answered{' '}
+            {
+              questions.filter(
+                (q) => selectedAnswers[q._id] === q.correctOption
+              ).length
+            }{' '}
+            out of {questions.length} questions correctly!
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowDialog(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Show Results on Page After Closing */}
+      {showResults && (
+        <Container style={{ marginTop: '30px', textAlign: 'center' }}>
+          <Typography variant="h5">Your Answers</Typography>
+          {questions.map((q) => (
+            <Typography
+              key={q._id}
+              style={{
+                marginTop: '10px',
+                color:
+                  selectedAnswers[q._id] === q.correctOption ? 'green' : 'red',
+                fontWeight: 'bold',
+              }}
+            >
+              {q.question} <br />
+              Your Answer: {selectedAnswers[q._id] || 'Not Answered'}{' '}
+              {selectedAnswers[q._id] === q.correctOption ? '✅' : '❌'} <br />
+              Correct Answer: {q.correctOption}
+            </Typography>
+          ))}
+        </Container>
       )}
     </Container>
   );

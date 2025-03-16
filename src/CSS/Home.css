@@ -11,6 +11,7 @@
 }
 
 .content {
+  width: 60%;
   max-width: 600px;
   /* margin-top: 56px/; */
 }
@@ -47,6 +48,7 @@ p {
 }
 
 .image-container {
+  width: 35%;
   max-width: 500px;
   /* margin-top: 90px; */
 }
@@ -59,20 +61,27 @@ img {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  img {
+    width: 70%;
+    height: auto;
+    border-radius: 10px;
+  }
+
   .container {
     flex-direction: column; /* Stack items vertically */
     text-align: center;
     padding: 0 6% 10%;
   }
-  h1 {
-    font-size: 2.25rem;
+  .content h1 {
+    font-size: 2rem;
     color: #272343;
   }
-  p {
+  .content p {
     margin-top: 4%;
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.5;
     color: black;
+    /* padding: 1rem; */
   }
   .image-container {
     order: -1; /* Moves the image to the top */
