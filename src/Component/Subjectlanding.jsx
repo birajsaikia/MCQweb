@@ -101,7 +101,7 @@ function SubjectLanding() {
           className={`box1 ${activeSection === 'topics' ? 'active' : ''}`}
           onClick={() => setActiveSection('topics')}
         >
-          <h2>DPP</h2>
+          <h2>Subjects</h2>
         </div>
         <Link to={`/mocktest/${courseId}`}>
           <div

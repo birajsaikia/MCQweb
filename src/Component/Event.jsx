@@ -154,7 +154,7 @@ const EventPage = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 2 }}>
       <Typography variant="h4" gutterBottom textAlign="center">
-        Current Events
+        Events
       </Typography>
 
       <Typography
