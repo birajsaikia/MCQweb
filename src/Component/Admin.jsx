@@ -133,7 +133,7 @@ const Admin = () => {
       if (selectedContent === 'event') {
         endpoint = 'https://mc-qweb-backend.vercel.app/user/useevent/events';
       } else if (selectedContent === 'course') {
-        endpoint = 'https://mc-qweb-backend.vercel.app/user/admin/add-course';
+        endpoint = ' http://localhost:5000/user/admin/add-course';
       } else if (selectedContent === 'milestone') {
         endpoint =
           'https://mc-qweb-backend.vercel.app/user/admin/add-milestone';

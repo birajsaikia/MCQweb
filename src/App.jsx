@@ -24,7 +24,7 @@ import Subjectlanding from './Component/Subjectlanding';
 import AddPYQ from './Component/AddPYQ';
 import ViewpyqQuation from './Component/viewPyqquations';
 import AddMockTest from './Component/AddMocktest';
-import ViewMockTest from './Component/AddMocktest';
+import ViewMockTest from './Component/viewMocktest';
 import MockTest from './Component/Mocktest';
 import PyqQuation from './Component/PYQquationView';
 import Jointevent from './Component/JoinEvent';
@@ -32,6 +32,7 @@ import EventQuationAdd from './Component/EventQuationAdd';
 import TopRank from './Component/TopRank';
 import AdminNotice from './Component/AdminNotice';
 import Aboutevent from './Component/aboutevent';
+import Domocktest from './Component/DoMocktest';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -105,6 +106,10 @@ function App() {
 
           <Route path="/addnotice/:courseId" element={<AdminNotice />} />
           <Route path="/aboutevent/:eventId" element={<Aboutevent />} />
+          <Route
+            path="/domocktest/:courseId/:paperId"
+            element={<Domocktest />}
+          />
         </Routes>
       </Router>
     </>

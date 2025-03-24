@@ -7,6 +7,7 @@ const AddPYQ = () => {
   const [newPYQ, setNewPYQ] = useState({
     year: '',
     name: '',
+    Link: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -103,6 +104,15 @@ const AddPYQ = () => {
             name="year"
             placeholder="Enter Year (e.g., 2023)"
             value={newPYQ.year}
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+          <input
+            type="text"
+            name="Link"
+            placeholder="Enter dive link"
+            value={newPYQ.Link}
             onChange={handleChange}
             required
             style={styles.input}

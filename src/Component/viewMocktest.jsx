@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import '../CSS/AdminMockTestPage.css'; // Import your CSS file
+import '../CSS/viewmocktest.css';
 
 const ViewMockTestQuestions = () => {
-  const { courseId, mockTestId } = useParams();
+  const { courseId, paperId } = useParams();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,29 +15,30 @@ const ViewMockTestQuestions = () => {
     correctOption: '',
   });
 
-  console.log('ViewMockTestQuestions -> courseId', courseId);
-  console.log('ViewMockTestQuestions -> mockTestId', mockTestId);
-
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          `https://mc-qweb-backend.vercel.app/user/admin/getmocktestquestions/${courseId}/${mockTestId}`
+          `https://mc-qweb-backend.vercel.app/user/admin/getmocktestquestions/${courseId}/${paperId}`
         );
-        setQuestions(response.data);
+
+        console.log('Fetched Questions:', response.data); // Debugging line
+
+        if (Array.isArray(response.data)) {
+          setQuestions(response.data);
+        } else {
+          setQuestions([]); // Prevents undefined issue
+        }
       } catch (error) {
         setError('Failed to fetch questions. Please try again.');
+        setQuestions([]); // Ensures questions is always an array
       } finally {
         setLoading(false);
       }
     };
 
     fetchQuestions();
-  }, [mockTestId, courseId]);
-
-  const handleChange = (e) => {
-    setNewQuestion({ ...newQuestion, [e.target.name]: e.target.value });
-  };
+  }, [paperId, courseId]);
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...newQuestion.options];
@@ -57,7 +58,7 @@ const ViewMockTestQuestions = () => {
 
     try {
       const response = await axios.post(
-        `https://mc-qweb-backend.vercel.app/user/admin/addmocktestquestion/${courseId}/${mockTestId}`,
+        `https://mc-qweb-backend.vercel.app/user/admin/addmocktestquestion/${courseId}/${paperId}`,
         {
           question: newQuestion.question,
           options: newQuestion.options,
@@ -67,7 +68,7 @@ const ViewMockTestQuestions = () => {
 
       if (response.status === 201) {
         alert('Question added successfully!');
-        setQuestions([...questions, newQuestion]); // ✅ Update state immediately
+        setQuestions([...questions, response.data]); // Use response data to get _id
         setNewQuestion({
           question: '',
           options: ['', '', '', ''],
@@ -85,14 +86,13 @@ const ViewMockTestQuestions = () => {
     }
   };
 
-  const handleDeleteQuestion = async (index) => {
+  const handleDeleteQuestion = async (questionId) => {
     try {
-      const questionToDelete = questions[index];
       await axios.delete(
-        `https://mc-qweb-backend.vercel.app/user/admin/deletemocktestquestion/${courseId}/${mockTestId}/${questionToDelete._id}`
+        `https://mc-qweb-backend.vercel.app/user/admin/deletemocktestquestion/${courseId}/${paperId}/${questionId}`
       );
       alert('Question deleted successfully!');
-      setQuestions(questions.filter((_, i) => i !== index));
+      setQuestions(questions.filter((q) => q._id !== questionId));
     } catch (error) {
       alert('Failed to delete question. Please try again.');
     }
@@ -162,9 +162,9 @@ const ViewMockTestQuestions = () => {
         <p className="admin-mocktest-no-questions">No questions available.</p>
       ) : (
         <ul className="admin-mocktest-question-list">
-          {questions.map((q, index) => (
-            <li key={index} className="admin-mocktest-question-item">
-              <strong>Q{index + 1}:</strong> {q.question}
+          {questions.map((q) => (
+            <li key={q._id} className="admin-mocktest-question-item">
+              <strong>{q.question}</strong>
               <ul className="admin-mocktest-option-list">
                 {q.options.map((opt, i) => (
                   <li
@@ -180,7 +180,7 @@ const ViewMockTestQuestions = () => {
                 ))}
               </ul>
               <button
-                onClick={() => handleDeleteQuestion(index)}
+                onClick={() => handleDeleteQuestion(q._id)}
                 className="admin-mocktest-delete-button"
               >
                 Delete
