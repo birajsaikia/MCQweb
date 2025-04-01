@@ -173,19 +173,26 @@ const MockTestPage = () => {
       {/* ✅ Results Dialog */}
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
         <DialogTitle>Mock Test Results</DialogTitle>
-        <DialogContent>
-          <Typography variant="h6" color="success.main">
-            ✅ Correct Answers: {correctCount} / {questions.length}
-          </Typography>
-          <Typography variant="h6" color="error.main">
-            ❌ Incorrect Answers: {questions.length - correctCount}
-          </Typography>
-          {submitted && (
-            <Typography variant="body2" color="textSecondary">
-              Highlighted questions in red indicate incorrect answers.
-            </Typography>
-          )}
-        </DialogContent>
+       <DialogContent>
+  <Typography variant="h6" color="primary">
+    📊 Total Questions Attempted: {Object.keys(selectedAnswers).length} / {questions.length}
+  </Typography>
+  <Typography variant="h6" color="success.main">
+    ✅ Correct Answers: {correctCount} / {questions.length}
+  </Typography>
+  <Typography variant="h6" color="error.main">
+    ❌ Incorrect Answers: {Object.keys(selectedAnswers).length - correctCount}
+  </Typography>
+  <Typography variant="h6" color="text.primary">
+    🏆 Total Marks: {correctCount * 4} {/* Replace `5` with your marks per question */}
+  </Typography>
+  {submitted && (
+    <Typography variant="body2" color="textSecondary">
+      Highlighted questions in red indicate incorrect answers.
+    </Typography>
+  )}
+</DialogContent>
+
         <DialogActions>
           <Button
             onClick={() => setShowDialog(false)}

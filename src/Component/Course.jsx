@@ -110,7 +110,7 @@ const Course = () => {
             <h3>{course.name}</h3>
             <p
               style={{
-                fontSize: '0.8rem',
+                fontSize: '0.95rem',
                 textAlign: 'center',
                 width: '90%',
                 lineHeight: '1.2rem',

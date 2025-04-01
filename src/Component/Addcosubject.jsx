@@ -71,7 +71,6 @@ const AddSubjectPage = () => {
   };
 
   const handleDeleteSubject = async (cosubjectId) => {
-    // console.log(`https://mc-qweb-backend.vercel.app/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`)
     try {
       await axios.delete(
         `https://mc-qweb-backend.vercel.app/user/admin/cosubject/${courseId}/${subjectId}/${cosubjectId}`
@@ -91,10 +90,11 @@ const AddSubjectPage = () => {
       {isTokenValid && (
         <div>
           <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-            Add Co Subject in {course} / {subject} /
+            Manage Co-Subjects in {course} / {subject}
           </Typography>
           <Divider sx={{ margin: '16px 0' }} />
 
+          {/* Add Co-Subject Section */}
           <Box
             sx={{
               display: 'flex',
@@ -103,7 +103,7 @@ const AddSubjectPage = () => {
             }}
           >
             <TextField
-              label="New Subject Name"
+              label="New Co-Subject Name"
               variant="outlined"
               value={subjectName}
               onChange={(e) => setSubjectName(e.target.value)}
@@ -114,7 +114,10 @@ const AddSubjectPage = () => {
             </Button>
           </Box>
 
-          <Typography variant="h5">Co-Subjects</Typography>
+          {/* Co-Subjects List */}
+          <Typography variant="h5" sx={{ marginBottom: '16px' }}>
+            Co-Subjects
+          </Typography>
           {getdata.cosubject && getdata.cosubject.length > 0 ? (
             getdata.cosubject.map((subject) => (
               <Box
@@ -133,7 +136,9 @@ const AddSubjectPage = () => {
                     variant="contained"
                     color="primary"
                     sx={{ marginRight: '8px' }}
-                    onClick={() => handleViewQuation(subject._id, subject.name)}
+                    onClick={() =>
+                      handleViewQuation(subject._id, subject.name)
+                    }
                   >
                     View Questions
                   </Button>
@@ -148,7 +153,9 @@ const AddSubjectPage = () => {
               </Box>
             ))
           ) : (
-            <Typography>No co-subjects added yet.</Typography>
+            <Typography variant="body1" sx={{ color: 'gray' }}>
+              No co-subjects added yet. You can proceed without adding co-subjects.
+            </Typography>
           )}
         </div>
       )}
